@@ -7,11 +7,11 @@ begin
  end if;
  perform 1 from public.profiles where id=target_id and role='nurse' for update;
  if not found then raise exception 'يمكن حذف حساب ممرض فقط'; end if;
- if exists(select 1 from public.preferences where user_id=target_id)
- or exists(select 1 from public.assignments where user_id=target_id)
- or exists(select 1 from public.roster_audit where subject_id=target_id or actor_id=target_id) then
-  raise exception 'الحساب مرتبط برغبات أو روستر أو سجل تعديلات ولا يمكن حذفه';
- end if;
+ delete from public.roster_audit where subject_id=target_id or actor_id=target_id;
+ delete from public.preferences where user_id=target_id;
+ delete from public.assignments where user_id=target_id;
+ -- The assignment delete trigger can append audit rows.
+ delete from public.roster_audit where subject_id=target_id;
  delete from auth.users where id=target_id;
  if not found then raise exception 'حساب الدخول غير موجود'; end if;
 end;

@@ -227,7 +227,7 @@ $('usersRows').onclick=async e=>{
  if(e.target.matches('.deleteUser')){
   const id=e.target.closest('tr').dataset.id;
   const user=allProfiles.find(item=>item.id===id);
-  if(!user||user.role!=='nurse'||!confirm('حذف حساب '+user.full_name+' نهائياً؟'))return;
+  if(!user||user.role!=='nurse'||!confirm('حذف حساب '+user.full_name+' نهائياً؟ سيتم حذف رغباته وشيفتاته من الروسترات القديمة وسجل تعديلاته المرتبط به. لا يمكن التراجع.'))return;
   const button=e.target;
   const feedback=button.closest('td').querySelector('.deleteFeedback');
   button.disabled=true;
