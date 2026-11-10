@@ -1,6 +1,6 @@
 # NurseRoster GitHub Pages setup
 1. Create a Supabase project at https://supabase.com/dashboard.
-2. Run `schema.sql` then `audit.sql`, `user-management.sql`, then `departments.sql` in SQL Editor.
+2. Run `schema.sql` then `audit.sql`, `user-management.sql`, then `departments.sql` and `preference-window.sql` in SQL Editor.
 3. In Supabase Authentication > Users, create one user per nurse/supervisor.
 4. For username login, use a unique alias email such as `nurse105@roster.invalid` and a strong password, created administratively; use the same username `nurse105` on the login screen. The email alias is NOT a deliverable mailbox. Do not enable public self-registration. Supabase's email-confirmation behavior may require admin-created confirmed users.
 5. The schema backfills missing profiles for existing Auth users and preserves existing roles. To make an admin, verify the intended account in Authentication > Users and copy its UUID, then run `update public.profiles set role='admin' where id='THE_ADMIN_UUID';` in SQL Editor. Do this only for trusted supervisors.
