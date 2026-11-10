@@ -1,3 +1,4 @@
+begin;
 -- NurseRoster Supabase schema. Run in Supabase SQL Editor.
 create extension if not exists pgcrypto;
 create table if not exists public.profiles (
@@ -38,13 +39,25 @@ returns trigger language plpgsql security definer set search_path = ''
 as $$
 begin
  insert into public.profiles(id,full_name,role)
- values(new.id,coalesce(nullif(new.raw_user_meta_data->>'full_name',''),split_part(new.email,'@',1)),'nurse')
+ values(new.id,coalesce(nullif(new.raw_user_meta_data->>'full_name',''),nullif(split_part(new.email,'@',1),''),new.id::text),'nurse')
  on conflict (id) do nothing;
  return new;
 end; $$;
 drop trigger if exists on_auth_user_created on auth.users;
 create trigger on_auth_user_created after insert on auth.users
 for each row execute function public.make_nurse_profile();
+
+-- Backfill accounts created before the profile trigger was installed.
+-- Existing profiles, including admin roles, keep their current values.
+insert into public.profiles (id, full_name)
+select u.id, coalesce(
+ nullif(u.raw_user_meta_data->>'full_name',''),
+ nullif(split_part(u.email,'@',1),''),
+ u.id::text
+)
+from auth.users u
+where not exists (select 1 from public.profiles p where p.id=u.id)
+on conflict (id) do nothing;
 alter table public.profiles enable row level security;
 alter table public.preferences enable row level security;
 alter table public.assignments enable row level security;
@@ -101,3 +114,5 @@ create policy periods_update on public.periods for update to authenticated using
 -- After creating YOUR admin user in Supabase Authentication > Users, run once:
 -- update public.profiles set role='admin' where id='YOUR_ADMIN_AUTH_USER_UUID';
 -- Do not run that update with a real UUID until you have verified the intended account.
+
+commit;

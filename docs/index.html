@@ -1,35 +1,53 @@
-<!doctype html><html lang="ar" dir="rtl"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>NurseRoster</title><style>body{font:16px Tahoma,Arial;background:#f3f7fa;color:#17354a;margin:0}header{background:#075174;color:white;padding:20px}main{max-width:1100px;margin:auto;padding:16px}.card{background:white;padding:18px;border-radius:12px;margin:14px 0}input,select,button{padding:9px;margin:5px;border:1px solid #cdd6df;border-radius:7px}button{background:#0875a2;color:white;cursor:pointer}.hidden{display:none}table{border-collapse:collapse;width:100%}th,td{border:1px solid #ddd;padding:8px;text-align:center}.scroll{overflow:auto}#notice{color:#a32323}:root{--blue:#08668b;--ink:#18384d}*{box-sizing:border-box}body{font-family:Tahoma,Arial;background:#f4f7fb;color:var(--ink)}header{background:linear-gradient(110deg,#064c70,#0a829d);display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:10px;box-shadow:0 4px 20px #1740571a}header b{font-size:21px}main{max-width:1250px;padding:24px}.card{border:1px solid #e1eaf1;border-radius:16px;box-shadow:0 7px 24px #1c4d650c;padding:24px}input,select{background:#fff;border:1px solid #cbdbe6;border-radius:9px;padding:11px}button{border:0;border-radius:9px;padding:11px 16px;background:var(--blue);font-weight:bold}button:hover{filter:brightness(.94)}button:disabled{opacity:.5}h2{margin:0 0 18px}th{background:#edf5f9;color:#345a70}th,td{border:0;border-bottom:1px solid #e5edf3;padding:12px 8px}tr:hover td{background:#f8fbfd}#login{max-width:480px;margin:55px auto;padding:34px}#loginForm{display:grid;gap:12px}#loginForm input,#loginForm button{width:100%;margin:0}#notice:not(:empty){padding:12px;border-radius:9px;background:#fff0e9}.nav{display:flex;flex-wrap:wrap;gap:8px;margin:16px 0}.nav button{background:white;color:#36586b;border:1px solid #d8e4eb}.nav button.active{background:var(--blue);color:white}.stats{display:grid;grid-template-columns:repeat(auto-fit,minmax(170px,1fr));gap:12px}.stat{background:#fff;padding:20px;border:1px solid #e1eaf1;border-radius:14px}.stat strong{display:block;font-size:27px;margin-top:10px}.muted{color:#65798a;font-size:13px}.user-tools{display:flex;gap:10px;flex-wrap:wrap;align-items:center;margin:14px 0}.user-tools input{min-width:230px}.user-input{max-width:170px}.user-role{max-width:120px}@media(max-width:700px){main{padding:12px}.card{padding:16px}header b{font-size:17px}}</style></head><body><header><b>🏥 NurseRoster — رغبات التمريض</b> <span id="identity"></span><button id="logout" class="hidden">خروج</button></header><main><p id="notice"></p><section id="login" class="card"><h2>تسجيل الدخول</h2><form id="loginForm"><input id="username" placeholder="اسم المستخدم أو البريد" required autocomplete="username"><input id="password" type="password" placeholder="كلمة المرور" required autocomplete="current-password"><button>دخول</button></form></section><section id="app" class="hidden"><div class="card"><input id="month" type="month"><button id="reload">تحديث</button><strong id="status"></strong></div><section id="nurse" class="card hidden"><h2>رغباتي</h2><div class="scroll"><table><thead><tr><th>التاريخ</th><th>الرغبة</th><th>الروستر المعتمد</th><th>حفظ</th></tr></thead><tbody id="nurseRows"></tbody></table></div></section><section id="admin" class="hidden"><nav class="nav"><button class="active" data-tab="roster">📅 إدارة الروستر</button><button data-tab="users">👥 إدارة المستخدمين</button><button data-tab="history">🕘 سجل التعديلات</button></nav><section id="tab-roster"><div class="stats"><div class="stat"><span class="muted">الممرضون</span><strong id="statNurses">0</strong></div><div class="stat"><span class="muted">رغبات الشهر</span><strong id="statPrefs">0</strong></div><div class="stat"><span class="muted">الشيفتات الموزعة</span><strong id="statAssign">0</strong></div></div><div class="card"><h2>لوحة المشرف</h2><select id="periodStatus"><option value="open">فتح الرغبات</option><option value="closed">إغلاق الرغبات</option><option value="published">نشر الروستر</option></select><button id="saveStatus">حفظ حالة الشهر</button><button id="export">تصدير CSV</button></div><div class="card scroll"><h2>الرغبات والتوزيع</h2><table><thead id="adminHead"></thead><tbody id="adminRows"></tbody></table></div></section><section id="tab-users" class="hidden"><div class="card"><h2>👥 إدارة المستخدمين</h2><p class="muted">تعديل الاسم والرقم الوظيفي وصلاحية الحسابات الموجودة. إنشاء حسابات جديدة يتم بأمان من Supabase Authentication.</p><div class="user-tools"><input id="userSearch" placeholder="بحث بالاسم أو الرقم الوظيفي"><button id="refreshUsers">تحديث</button><a href="https://supabase.com/dashboard/project/knvxfyalfqqklpiwcwor/auth/users" target="_blank" rel="noopener">إضافة حساب جديد ↗</a></div><div class="scroll"><table><thead><tr><th>الاسم</th><th>الرقم الوظيفي</th><th>الصلاحية</th><th>الإجراء</th></tr></thead><tbody id="usersRows"></tbody></table></div><p class="muted">لتفعيل تعديل المستخدمين، نفّذ ملف docs/user-management.sql في Supabase SQL Editor مرة واحدة.</p></div></section><section id="tab-history" class="hidden"><div class="card scroll"><h2>سجل تعديلات المشرفين</h2><table><thead><tr><th>التاريخ والوقت</th><th>المشرف</th><th>الممرض</th><th>اليوم</th><th>قبل</th><th>بعد</th></tr></thead><tbody id="auditRows"></tbody></table></div></section></section></section></main><script type="module">
+<!doctype html><html lang="ar" dir="rtl"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>NurseRoster</title><style>body{font:16px Tahoma,Arial;background:#f3f7fa;color:#17354a;margin:0}header{background:#075174;color:white;padding:20px}main{max-width:1100px;margin:auto;padding:16px}.card{background:white;padding:18px;border-radius:12px;margin:14px 0}input,select,button{padding:9px;margin:5px;border:1px solid #cdd6df;border-radius:7px}button{background:#0875a2;color:white;cursor:pointer}.hidden{display:none}table{border-collapse:collapse;width:100%}th,td{border:1px solid #ddd;padding:8px;text-align:center}.scroll{overflow:auto}#notice{color:#a32323}:root{--blue:#08668b;--ink:#18384d}*{box-sizing:border-box}body{font-family:Tahoma,Arial;background:#f4f7fb;color:var(--ink)}header{background:linear-gradient(110deg,#064c70,#0a829d);display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:10px;box-shadow:0 4px 20px #1740571a}header b{font-size:21px}main{max-width:1250px;padding:24px}.card{border:1px solid #e1eaf1;border-radius:16px;box-shadow:0 7px 24px #1c4d650c;padding:24px}input,select{background:#fff;border:1px solid #cbdbe6;border-radius:9px;padding:11px}button{border:0;border-radius:9px;padding:11px 16px;background:var(--blue);font-weight:bold}button:hover{filter:brightness(.94)}button:disabled{opacity:.5}h2{margin:0 0 18px}th{background:#edf5f9;color:#345a70}th,td{border:0;border-bottom:1px solid #e5edf3;padding:12px 8px}tr:hover td{background:#f8fbfd}#login{max-width:480px;margin:55px auto;padding:34px}#loginForm{display:grid;gap:12px}#loginForm input,#loginForm button{width:100%;margin:0}#notice:not(:empty){padding:12px;border-radius:9px;background:#fff0e9}.nav{display:flex;flex-wrap:wrap;gap:8px;margin:16px 0}.nav button{background:white;color:#36586b;border:1px solid #d8e4eb}.nav button.active{background:var(--blue);color:white}.stats{display:grid;grid-template-columns:repeat(auto-fit,minmax(170px,1fr));gap:12px}.stat{background:#fff;padding:20px;border:1px solid #e1eaf1;border-radius:14px}.stat strong{display:block;font-size:27px;margin-top:10px}.muted{color:#65798a;font-size:13px}.user-tools{display:flex;gap:10px;flex-wrap:wrap;align-items:center;margin:14px 0}.user-tools input{min-width:230px}.user-input{max-width:170px}.user-role{max-width:120px}@media(max-width:700px){main{padding:12px}.card{padding:16px}header b{font-size:17px}}</style></head><body><header><b>🏥 NurseRoster — رغبات التمريض</b> <span id="identity"></span><button id="logout" class="hidden">خروج</button></header><main><p id="notice"></p><section id="login" class="card"><h2>تسجيل الدخول</h2><form id="loginForm"><input id="username" placeholder="اسم المستخدم أو البريد" required autocomplete="username"><input id="password" type="password" placeholder="كلمة المرور" required autocomplete="current-password"><button>دخول</button></form></section><section id="app" class="hidden"><div class="card"><input id="month" type="month"><button id="reload">تحديث</button><strong id="status"></strong></div><section id="nurse" class="card hidden"><h2>رغباتي</h2><div class="scroll"><table><thead><tr><th>التاريخ</th><th>الرغبة</th><th>الروستر المعتمد</th><th>حفظ</th></tr></thead><tbody id="nurseRows"></tbody></table></div></section><section id="admin" class="hidden"><nav class="nav"><button class="active" data-tab="roster">📅 إدارة الروستر</button><button data-tab="users">👥 إدارة المستخدمين</button><button data-tab="departments">الأقسام</button><button data-tab="reports">التقارير</button><button data-tab="history">🕘 سجل التعديلات</button></nav><section id="tab-roster"><div class="stats"><div class="stat"><span class="muted">الممرضون</span><strong id="statNurses">0</strong></div><div class="stat"><span class="muted">رغبات الشهر</span><strong id="statPrefs">0</strong></div><div class="stat"><span class="muted">الشيفتات الموزعة</span><strong id="statAssign">0</strong></div></div><div class="card"><h2>لوحة المشرف</h2><select id="periodStatus"><option value="open">فتح الرغبات</option><option value="closed">إغلاق الرغبات</option><option value="published">نشر الروستر</option></select><button id="saveStatus">حفظ حالة الشهر</button><button id="export">تصدير CSV</button></div><div class="card scroll"><h2>الرغبات والتوزيع</h2><table><thead id="adminHead"></thead><tbody id="adminRows"></tbody></table></div></section><section id="tab-users" class="hidden"><div class="card"><h2>👥 إدارة المستخدمين</h2><p class="muted">تعديل الاسم والرقم الوظيفي وصلاحية الحسابات الموجودة. إنشاء حسابات جديدة يتم بأمان من Supabase Authentication.</p><div class="user-tools"><input id="userSearch" placeholder="بحث بالاسم أو الرقم الوظيفي"><button id="refreshUsers">تحديث</button><a href="https://supabase.com/dashboard/project/knvxfyalfqqklpiwcwor/auth/users" target="_blank" rel="noopener">إضافة حساب جديد ↗</a></div><div class="scroll"><table><thead><tr><th>الاسم</th><th>الرقم الوظيفي</th><th>الصلاحية</th><th>القسم</th><th>الإجراء</th></tr></thead><tbody id="usersRows"></tbody></table></div></div></section><section id="tab-departments" class="card hidden">
+<h2>الأقسام</h2>
+<form id="departmentForm"><label>اسم القسم <input id="departmentName" required maxlength="100"></label><button>إضافة قسم</button></form>
+<div class="scroll"><table><thead><tr><th>اسم القسم</th><th>الإجراء</th></tr></thead><tbody id="departmentRows"></tbody></table></div>
+</section>
+<section id="tab-reports" class="card hidden">
+<h2>ملخص الشيفتات للشهر المحدد</h2>
+<label>القسم <select id="reportDepartment"></select></label><button id="exportReport">تصدير الملخص CSV</button>
+<div class="scroll"><table><thead><tr><th>الممرض</th><th>القسم</th><th>E</th><th>N</th><th>8</th><th>#</th><th>الإجمالي</th></tr></thead><tbody id="reportRows"></tbody></table></div>
+</section>
+<section id="tab-history" class="hidden"><div class="card scroll"><h2>سجل تعديلات المشرفين</h2><table><thead><tr><th>التاريخ والوقت</th><th>المشرف</th><th>الممرض</th><th>اليوم</th><th>قبل</th><th>بعد</th></tr></thead><tbody id="auditRows"></tbody></table></div></section></section></section></main><script type="module">
 import {createClient} from 'https://esm.sh/@supabase/supabase-js@2';
 import {SUPABASE_URL,SUPABASE_ANON_KEY} from './config.js';
 const $=id=>document.getElementById(id),esc=s=>String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;','\'':'&#39;'}[c]));
-const codes=['E','N','8','#'];let db,me,profile,period,people=[],allProfiles=[],prefs=[],assign=[];
+const codes=['E','N','8','#'];let db,me,profile,period,people=[],allProfiles=[],prefs=[],assign=[],departments=[];
 const note=s=>$('notice').textContent=s,show=(id,v)=>$(id).classList.toggle('hidden',!v);
 $('month').value=new Date().toLocaleDateString('en-CA').slice(0,7);
 const dates=()=>{const [y,m]=$('month').value.split('-').map(Number);return Array.from({length:new Date(y,m,0).getDate()},(_,i)=>$('month').value+'-'+String(i+1).padStart(2,'0'));};
 const opts=(v,empty=false)=>(empty?'<option value="">—</option>':'')+codes.map(c=>'<option '+(c===v?'selected':'')+'>'+c+'</option>').join('');
 async function check(res){if(res.error)throw res.error;return res.data;}
 async function session(){const {data:{user}}=await db.auth.getUser();me=user;show('login',!me);show('app',!!me);show('logout',!!me);if(!me)return;profile=await check(await db.from('profiles').select('*').eq('id',me.id).single());$('identity').textContent=' | '+profile.full_name;show('nurse',profile.role==='nurse');show('admin',profile.role==='admin');await load();}
-async function load(){if(!profile)return;const first=$('month').value+'-01',last=dates().at(-1);const [p,pr,a,us]=await Promise.all([db.from('periods').select('*').eq('month',first).maybeSingle(),db.from('preferences').select('*').gte('work_date',first).lte('work_date',last),db.from('assignments').select('*').gte('work_date',first).lte('work_date',last),profile.role==='admin'?db.from('profiles').select('*').order('full_name'):Promise.resolve({data:[]})]);period=await check(p)||{month:first,status:'closed'};prefs=await check(pr);assign=await check(a);allProfiles=await check(us);people=allProfiles.filter(x=>x.role==='nurse');$('status').textContent='الحالة: '+period.status;if(profile.role==='admin'){renderAdmin();renderUsers();await audit();}else renderNurse();}
-function renderNurse(){const p=new Map(prefs.filter(x=>x.user_id===me.id).map(x=>[x.work_date,x.shift_code])),a=new Map(assign.filter(x=>x.user_id===me.id).map(x=>[x.work_date,x.shift_code]));$('nurseRows').innerHTML=dates().map(d=>'<tr><td>'+d+'</td><td><select data-date="'+d+'" '+(period.status!=='open'?'disabled':'')+'>'+opts(p.get(d))+'</select></td><td>'+(period.status==='published'?(a.get(d)||'—'):'لم يُنشر')+'</td><td><button class="savePref" data-date="'+d+'" '+(period.status!=='open'?'disabled':'')+'>حفظ</button></td></tr>').join('');}
+async function readAll(query, order){
+ const rows=[];
+ for(let start=0;;start+=500){
+  const page=await check(await query.order(order).range(start,start+499));
+  rows.push(...page);
+  if(page.length<500)return rows;
+ }
+}
+async function load(){if(!profile)return;if(!$('month').value)throw Error('اختر الشهر أولاً');const first=$('month').value+'-01',last=dates().at(-1);const [p,pr,a,us,depts]=await Promise.all([db.from('periods').select('*').eq('month',first).maybeSingle(),readAll(db.from('preferences').select('*').gte('work_date',first).lte('work_date',last),'id'),readAll(db.from('assignments').select('*').gte('work_date',first).lte('work_date',last),'id'),profile.role==='admin'?readAll(db.from('profiles').select('*').order('full_name'),'id'):[],profile.role==='admin'?readAll(db.from('departments').select('*').order('name'),'id'):[]]);period=await check(p)||{month:first,status:'closed'};prefs=pr;assign=a;allProfiles=us;departments=depts;people=allProfiles.filter(x=>x.role==='nurse');$('status').textContent='الحالة: '+period.status;if(profile.role==='admin'){renderAdmin();renderUsers();renderDepartments();renderReport();await audit();}else renderNurse();}
+function renderNurse(){const p=new Map(prefs.filter(x=>x.user_id===me.id).map(x=>[x.work_date,x.shift_code])),a=new Map(assign.filter(x=>x.user_id===me.id).map(x=>[x.work_date,x.shift_code]));$('nurseRows').innerHTML=dates().map(d=>'<tr><td>'+d+'</td><td><select data-date="'+d+'" '+(period.status!=='open'?'disabled':'')+'>'+opts(p.get(d),true)+'</select></td><td>'+(period.status==='published'?(a.get(d)||'—'):'لم يُنشر')+'</td><td><button class="savePref" data-date="'+d+'" '+(period.status!=='open'?'disabled':'')+'>حفظ</button></td></tr>').join('');}
 function renderAdmin(){$('statNurses').textContent=people.length;$('statPrefs').textContent=prefs.length;$('statAssign').textContent=assign.length;const p=new Map(prefs.map(x=>[x.user_id+'|'+x.work_date,x.shift_code])),a=new Map(assign.map(x=>[x.user_id+'|'+x.work_date,x.shift_code]));$('periodStatus').value=period.status;$('adminHead').innerHTML='<tr><th>الممرض</th>'+dates().map(d=>'<th>'+d.slice(-2)+'</th>').join('')+'</tr>';$('adminRows').innerHTML=people.map(u=>'<tr><th>'+esc(u.full_name)+'</th>'+dates().map(d=>'<td><small>رغبة: '+esc(p.get(u.id+'|'+d)||'—')+'</small><br><select class="assignment" data-user="'+u.id+'" data-date="'+d+'" '+(period.status==='published'?'disabled':'')+'>'+opts(a.get(u.id+'|'+d),true)+'</select></td>').join('')+'</tr>').join('');}
 
 function renderUsers(){
  const q=$('userSearch').value.trim().toLowerCase();
  const filtered=allProfiles.filter(u=>(u.full_name+' '+(u.employee_no||'')).toLowerCase().includes(q));
- $('usersRows').innerHTML=filtered.map(u=>'<tr data-id="'+esc(u.id)+'"><td><input class="user-input editName" value="'+esc(u.full_name)+'"></td><td><input class="user-input editNo" value="'+esc(u.employee_no||'')+'" placeholder="بدون رقم"></td><td><select class="user-role editRole" '+(u.id===me.id?'disabled':'')+'><option value="nurse" '+(u.role==='nurse'?'selected':'')+'>ممرض</option><option value="admin" '+(u.role==='admin'?'selected':'')+'>مشرف</option></select></td><td><button class="saveUser">حفظ</button></td></tr>').join('')||'<tr><td colspan="4">لا توجد نتائج</td></tr>';
+ $('usersRows').innerHTML=filtered.map(u=>'<tr data-id="'+esc(u.id)+'"><td><input class="user-input editName" value="'+esc(u.full_name)+'"></td><td><input class="user-input editNo" value="'+esc(u.employee_no||'')+'" placeholder="بدون رقم"></td><td><select class="user-role editRole" '+(u.id===me.id?'disabled':'')+'><option value="nurse" '+(u.role==='nurse'?'selected':'')+'>ممرض</option><option value="admin" '+(u.role==='admin'?'selected':'')+'>مشرف</option></select></td><td><select class="editDepartment">'+departmentOptions(u.department_id,'بدون قسم')+'</select></td><td><button class="saveUser">حفظ</button></td></tr>').join('')||'<tr><td colspan="5">لا توجد نتائج</td></tr>';
 }
 $('userSearch').oninput=()=>renderUsers();
 $('refreshUsers').onclick=()=>load().catch(e=>note(e.message));
 document.querySelectorAll('[data-tab]').forEach(b=>b.onclick=()=>{
  document.querySelectorAll('[data-tab]').forEach(x=>x.classList.toggle('active',x===b));
- ['roster','users','history'].forEach(x=>show('tab-'+x,x===b.dataset.tab));
+ ['roster','users','departments','reports','history'].forEach(x=>show('tab-'+x,x===b.dataset.tab));
 });
 $('usersRows').onclick=async e=>{
  if(!e.target.matches('.saveUser'))return;
  const tr=e.target.closest('tr'),id=tr.dataset.id;
  const full_name=tr.querySelector('.editName').value.trim(),employee_no=tr.querySelector('.editNo').value.trim()||null,role=tr.querySelector('.editRole').value;
  if(!full_name){note('الاسم مطلوب');return;}
- try{e.target.disabled=true;await check(await db.from('profiles').update({full_name,employee_no,role}).eq('id',id).select('id').single());note('تم حفظ المستخدم');await load();}
+ try{e.target.disabled=true;await check(await db.from('profiles').update({full_name,employee_no,role,department_id:tr.querySelector('.editDepartment').value||null}).eq('id',id).select('id').single());note('تم حفظ المستخدم');await load();}
  catch(err){note('تعذر الحفظ: '+err.message);e.target.disabled=false;}
 };
 
@@ -37,9 +55,81 @@ async function audit(){const rows=await check(await db.from('roster_audit').sele
 $('loginForm').onsubmit=async e=>{e.preventDefault();try{let u=$('username').value.trim();if(!u.includes('@')){if(!/^[a-zA-Z0-9_-]{3,40}$/.test(u))throw Error('اسم المستخدم غير صالح');u+='@roster.invalid';}await check(await db.auth.signInWithPassword({email:u,password:$('password').value}));await session();note('');}catch(e){note(e.message);}};
 $('logout').onclick=async()=>{await db.auth.signOut();profile=null;await session();};
 $('reload').onclick=()=>load().catch(e=>note(e.message));$('month').onchange=$('reload').onclick;
-$('nurseRows').onclick=async e=>{if(!e.target.matches('.savePref'))return;try{const d=e.target.dataset.date;await check(await db.from('preferences').upsert({user_id:me.id,work_date:d,shift_code:document.querySelector('select[data-date="'+d+'"]').value},{onConflict:'user_id,work_date'}));note('تم حفظ رغبتك ليوم '+d);await load();}catch(err){note(err.message);}};
+$('nurseRows').onclick=async e=>{if(!e.target.matches('.savePref'))return;try{const d=e.target.dataset.date;const shift=document.querySelector('select[data-date=+d+]').value;if(!shift)throw Error('اختر الشيفت أولاً');await check(await db.from('preferences').upsert({user_id:me.id,work_date:d,shift_code:document.querySelector('select[data-date="'+d+'"]').value},{onConflict:'user_id,work_date'}));note('تم حفظ رغبتك ليوم '+d);await load();}catch(err){note(err.message);}};
 $('saveStatus').onclick=async()=>{try{await check(await db.from('periods').upsert({month:$('month').value+'-01',status:$('periodStatus').value},{onConflict:'month'}));note('تم تحديث حالة الشهر');await load();}catch(e){note(e.message);}};
 $('adminRows').onchange=async e=>{if(!e.target.matches('.assignment')||!e.target.value)return;try{await check(await db.from('assignments').upsert({user_id:e.target.dataset.user,work_date:e.target.dataset.date,shift_code:e.target.value},{onConflict:'user_id,work_date'}));note('تم حفظ التعديل وتسجيل المشرف');await load();}catch(err){note(err.message);}};
-$('export').onclick=()=>{const a=new Map(assign.map(x=>[x.user_id+'|'+x.work_date,x.shift_code]));const rows=[['الموظف',...dates()],...people.map(u=>[u.full_name,...dates().map(d=>a.get(u.id+'|'+d)||'')])];const csv='\uFEFF'+rows.map(r=>r.map(v=>'"'+String(v).replace(/"/g,'""')+'"').join(',')).join('\r\n');const url=URL.createObjectURL(new Blob([csv],{type:'text/csv;charset=utf-8'}));const link=document.createElement('a');link.href=url;link.download='roster-'+$('month').value+'.csv';link.click();URL.revokeObjectURL(url);};
+function departmentOptions(selected,label){
+ return '<option value="">'+label+'</option>'+departments.map(d=>
+  '<option value="'+esc(d.id)+'" '+(String(d.id)===String(selected)?'selected':'')+'>'+esc(d.name)+'</option>'
+ ).join('');
+}
+function renderDepartments(){
+ $('departmentRows').innerHTML=departments.map(d=>'<tr data-id="'+esc(d.id)+'"><td><input aria-label="اسم القسم" maxlength="100" value="'+esc(d.name)+'"></td><td><button class="saveDepartment">حفظ</button></td></tr>').join('')||'<tr><td colspan="2">لا توجد أقسام</td></tr>';
+ const filter=$('reportDepartment');
+ const selected=filter.value;
+ filter.innerHTML=departmentOptions(selected,'كل الأقسام');
+}
+async function saveDepartment(name,id){
+ if(!name)throw Error('اكتب اسم القسم');
+ const table=db.from('departments');
+ const write=id?table.update({name}).eq('id',id):table.insert({name});
+ await check(await write.select('id').single());
+ await load();
+ note('تم حفظ القسم');
+}
+$('departmentForm').onsubmit=async e=>{
+ e.preventDefault();
+ const button=e.submitter;
+ button.disabled=true;
+ try{await saveDepartment($('departmentName').value.trim());e.target.reset();}
+ catch(err){note(err.message);}
+ finally{button.disabled=false;}
+};
+$('departmentRows').onclick=async e=>{
+ if(!e.target.matches('.saveDepartment'))return;
+ const row=e.target.closest('tr');
+ e.target.disabled=true;
+ try{await saveDepartment(row.querySelector('input').value.trim(),row.dataset.id);}
+ catch(err){note(err.message);}
+ finally{e.target.disabled=false;}
+};
+const reportHeader=['الممرض','القسم',...codes,'الإجمالي'];
+function reportData(){
+ const filter=$('reportDepartment').value;
+ const names=new Map(departments.map(d=>[String(d.id),d.name]));
+ const counts=new Map();
+ for(const shift of assign){
+  if(!counts.has(shift.user_id))counts.set(shift.user_id,{});
+  const entry=counts.get(shift.user_id);
+  entry[shift.shift_code]=(entry[shift.shift_code]||0)+1;
+ }
+ return people.filter(u=>!filter||String(u.department_id)===filter).map(u=>{
+  const totals=codes.map(code=>counts.get(u.id)?.[code]||0);
+  return [u.full_name,names.get(String(u.department_id))||'بدون قسم',...totals,totals.reduce((a,b)=>a+b,0)];
+ });
+}
+function renderReport(){
+ $('reportRows').innerHTML=reportData().map(row=>'<tr>'+row.map(value=>'<td>'+esc(value)+'</td>').join('')+'</tr>').join('')||'<tr><td colspan="7">لا توجد نتائج</td></tr>';
+}
+$('reportDepartment').onchange=renderReport;
+function downloadCsv(rows,filename){
+ const csv='\uFEFF'+rows.map(row=>row.map(value=>{
+  const text=String(value);
+  const safe=/^[\s]*[=+@-]|^[\t\r\n]/.test(text)?"'"+text:text;
+  return '"'+safe.replace(/"/g,'""')+'"';
+ }).join(',')).join('\r\n');
+ const url=URL.createObjectURL(new Blob([csv],{type:'text/csv;charset=utf-8'}));
+ const link=document.createElement('a');
+ link.href=url;
+ link.download=filename+'-'+$('month').value+'.csv';
+ link.click();
+ setTimeout(()=>URL.revokeObjectURL(url),1000);
+}
+$('exportReport').onclick=()=>downloadCsv([reportHeader,...reportData()],'shift-summary');
+$('export').onclick=()=>{
+ const byDay=new Map(assign.map(x=>[x.user_id+'|'+x.work_date,x.shift_code]));
+ const days=dates();
+ downloadCsv([['الممرض',...days],...people.map(u=>[u.full_name,...days.map(d=>byDay.get(u.id+'|'+d)||'')])],'roster');
+};
 if(SUPABASE_URL.startsWith('YOUR_')||SUPABASE_ANON_KEY.startsWith('YOUR_')){note('لازم تضبط docs/config.js ببيانات Supabase الأول.');}else{db=createClient(SUPABASE_URL,SUPABASE_ANON_KEY);session().catch(e=>note(e.message));}
 </script></body></html>
