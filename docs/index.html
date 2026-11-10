@@ -26,12 +26,20 @@
  body.printing-roster #rosterPrint{display:block}
  #rosterPrint table{width:100%;font-size:8pt;table-layout:fixed}
  #rosterPrint th,#rosterPrint td{padding:3px 1px;border:1px solid #aaa;overflow-wrap:anywhere}
- #rosterPrint th:first-child{width:19%}#rosterPrint tr{break-inside:avoid}
+ #rosterPrint th:first-child{width:4%}#rosterPrint th:nth-child(2){width:20%}
+ #rosterPrint tr{break-inside:avoid}
+ #rosterPrint thead tr:first-child th{background:#4b7cb2;color:#fff;height:25mm}
+ #rosterPrint thead tr:nth-child(2) th,#rosterPrint tbody tr:nth-child(even){background:#b8cade}
+ #rosterPrint tbody tr:nth-child(odd){background:#e1eaf4}
+ #rosterPrint tbody td.summary{background:#fff54b}
+ #rosterPrint .vertical{writing-mode:vertical-rl;transform:rotate(180deg);display:inline-block;white-space:nowrap}
+ #rosterPrint table{print-color-adjust:exact;-webkit-print-color-adjust:exact}
+ #rosterPrint h2{font-size:13pt;text-align:right;margin:0 0 3mm}
 }
 </style></head><body><header><b>🏥 NurseRoster — رغبات التمريض</b> <span id="identity"></span><button id="logout" class="hidden">خروج</button></header><main><p id="notice" role="status"></p><section id="login" class="card"><h2>تسجيل الدخول</h2><form id="loginForm"><input id="username" placeholder="اسم المستخدم أو البريد" required autocomplete="username"><input id="password" type="password" placeholder="كلمة المرور" required autocomplete="current-password"><button>دخول</button></form></section><section id="app" class="hidden"><div class="card"><label>شهر الروستر <input id="month" type="month" required></label><button id="reload">تحديث</button><strong id="status"></strong></div><section id="nurse" class="card hidden"><div class="calendar-heading"><div><h2 id="calendarTitle">رغباتي</h2><p id="windowMessage" class="muted"></p></div></div>
 <form id="preferencesForm"><div id="calendarGrid" class="calendar-grid"></div>
 <div class="calendar-actions"><button id="savePreferences">حفظ كل الرغبات</button><span id="calendarHint" class="muted">اختار الشيفت للأيام المطلوبة، وبعدها احفظ مرة واحدة.</span></div>
-</form></section><section id="admin" class="hidden"><nav class="nav"><button class="active" data-tab="roster">📅 إدارة الروستر</button><button data-tab="users">👥 إدارة المستخدمين</button><button data-tab="departments">الأقسام</button><button data-tab="reports">التقارير</button><button data-tab="history">🕘 سجل التعديلات</button></nav><section id="tab-roster"><div class="stats"><div class="stat"><span class="muted">الممرضون</span><strong id="statNurses">0</strong></div><div class="stat"><span class="muted">رغبات الشهر</span><strong id="statPrefs">0</strong></div><div class="stat"><span class="muted">الشيفتات الموزعة</span><strong id="statAssign">0</strong></div></div><div class="card"><h2>لوحة المشرف</h2><select id="periodStatus"><option value="open">فتح الرغبات</option><option value="closed">إغلاق الرغبات</option><option value="published">نشر الروستر</option></select><div class="window-fields"><label>بداية استقبال الرغبات <input type="date" id="opensOn"></label><label>آخر يوم للاستقبال <input type="date" id="closesOn"></label><small class="muted">بتوقيت القاهرة. الشهر المختار فوق هو شهر الروستر.</small></div><p id="rosterGuide" class="muted" aria-live="polite"></p><button id="saveStatus">حفظ حالة الشهر</button><button id="saveRoster">حفظ الروستر</button><button id="printRoster">طباعة النهائي</button><button id="export">تصدير النهائي CSV</button></div><div class="card"><h2>رغبات التمريض والروستر</h2><p class="muted">السطر الأول رغبات الممرض. السطر التاني روستر المشرف، والخانات المظللة مقترحات من الرغبات لحد ما تحفظها.</p><div class="scroll roster-scroll"><table class="roster-grid"><thead id="adminHead"></thead><tbody id="adminRows"></tbody></table></div></div></section><section id="tab-users" class="hidden"><div class="card"><h2>👥 إدارة المستخدمين</h2><p class="muted">إنشاء حسابات وتعديل بياناتها وصلاحياتها وأقسامها.</p><form id="createUserForm" class="user-tools">
+</form></section><section id="admin" class="hidden"><nav class="nav"><button class="active" data-tab="roster">📅 إدارة الروستر</button><button data-tab="users">👥 إدارة المستخدمين</button><button data-tab="departments">الأقسام</button><button data-tab="reports">التقارير</button><button data-tab="history">🕘 سجل التعديلات</button></nav><section id="tab-roster"><div class="stats"><div class="stat"><span class="muted">الممرضون</span><strong id="statNurses">0</strong></div><div class="stat"><span class="muted">رغبات الشهر</span><strong id="statPrefs">0</strong></div><div class="stat"><span class="muted">الشيفتات الموزعة</span><strong id="statAssign">0</strong></div></div><div class="card"><h2>لوحة المشرف</h2><select id="periodStatus"><option value="open">فتح الرغبات</option><option value="closed">إغلاق الرغبات</option><option value="published">نشر الروستر</option></select><div class="window-fields"><label>بداية استقبال الرغبات <input type="date" id="opensOn"></label><label>آخر يوم للاستقبال <input type="date" id="closesOn"></label><small class="muted">بتوقيت القاهرة. الشهر المختار فوق هو شهر الروستر.</small></div><p id="rosterGuide" class="muted" aria-live="polite"></p><button id="saveStatus">حفظ حالة الشهر</button><button id="saveRoster">حفظ الروستر</button><button id="printRoster">طباعة النهائي</button><button id="export">تصدير النهائي Excel</button></div><div class="card"><h2>رغبات التمريض والروستر</h2><p class="muted">السطر الأول رغبات الممرض. السطر التاني روستر المشرف، والخانات المظللة مقترحات من الرغبات لحد ما تحفظها.</p><div class="scroll roster-scroll"><table class="roster-grid"><thead id="adminHead"></thead><tbody id="adminRows"></tbody></table></div></div></section><section id="tab-users" class="hidden"><div class="card"><h2>👥 إدارة المستخدمين</h2><p class="muted">إنشاء حسابات وتعديل بياناتها وصلاحياتها وأقسامها.</p><form id="createUserForm" class="user-tools">
 <label>الاسم <input id="newFullName" required maxlength="120"></label>
 <label>اسم المستخدم أو البريد <input id="newLogin" required maxlength="254" autocomplete="off"></label>
 <label>كلمة المرور <input id="newPassword" type="password" required minlength="12" maxlength="72" autocomplete="new-password"></label>
@@ -430,19 +438,56 @@ $('exportReport').onclick=()=>downloadCsv([reportHeader,...reportData()],'shift-
 function finalRoster(){
  const byDay=new Map(assign.map(x=>[x.user_id+'|'+x.work_date,x.shift_code]));
  const days=dates();
- return [['الممرض',...days.map(day=>day.slice(-2))],...people.map(user=>[
-  user.full_name,...days.map(day=>byDay.get(user.id+'|'+day)||'')
- ])];
+ const weekday=new Intl.DateTimeFormat('ar-EG',{weekday:'long',timeZone:'UTC'});
+ return {
+  headings:['رقم الموظف','اسم الممرض',...days.map(day=>weekday.format(new Date(day+'T12:00:00Z'))),'الراحة كم','عدد الشيفتات','فوق اللائحة'],
+  numbers:['','',...days.map(day=>Number(day.slice(-2))),'','',''],
+  rows:people.map((user,index)=>{
+   const shifts=days.map(day=>byDay.get(user.id+'|'+day)||'');
+   return [user.employee_no||index+1,user.full_name,...shifts,
+    shifts.filter(shift=>shift==='#').length,shifts.filter(shift=>shift&&shift!=='#').length,''];
+  })
+ };
+}
+function rosterWorkbook({headings,numbers,rows}){
+ const xml=value=>esc(String(value??'').replace(/[\x00-\x08\x0B\x0C\x0E-\x1F]/g,'')).replaceAll('&#39;','&apos;');
+ const cell=(value,style)=>'<Cell ss:StyleID="'+style+'"><Data ss:Type="'+
+  (typeof value==='number'?'Number':'String')+'">'+xml(value)+'</Data></Cell>';
+ const row=(cells,height)=>'<Row ss:Height="'+height+'">'+cells.join('')+'</Row>';
+ const style=(id,color,extra='',fill='')=>'<Style ss:ID="'+id+'"><Alignment ss:Horizontal="Center" ss:Vertical="Center" '+extra+'/>'+
+  '<Font ss:FontName="Arial" ss:Size="10" ss:Color="'+color+'"/>'+
+  '<Interior ss:Color="'+fill+'" ss:Pattern="Solid"/><Borders>'+
+  ['Bottom','Left','Right','Top'].map(side=>'<Border ss:Position="'+side+'" ss:LineStyle="Continuous" ss:Weight="1"/>').join('')+'</Borders></Style>';
+ return '<?xml version="1.0" encoding="UTF-8"?><?mso-application progid="Excel.Sheet"?>'+
+ '<Workbook xmlns="urn:schemas-microsoft-com:office:spreadsheet" xmlns:ss="urn:schemas-microsoft-com:office:spreadsheet" xmlns:x="urn:schemas-microsoft-com:office:excel"><Styles>'+
+ style('header','#FFFFFF','ss:WrapText="1"','#4B7CB2')+
+ style('vertical','#FFFFFF','ss:Rotate="90"','#4B7CB2')+
+ style('days','#132C44','','#B8CADE')+style('light','#132C44','','#E1EAF4')+
+ style('dark','#132C44','','#B8CADE')+style('summary','#132C44','','#FFF54B')+
+ '</Styles><Worksheet ss:Name="روستر '+xml($('month').value)+'"><Table>'+
+ '<Column ss:Width="43"/><Column ss:Width="170"/>'+
+ '<Column ss:Width="20" ss:Span="'+(headings.length-3)+'"/>'+
+ row(headings.map((value,i)=>cell(value,i<2?'header':'vertical')),65)+
+ row(numbers.map(value=>cell(value,'days')),18)+
+ rows.map((values,i)=>row(values.map((value,j)=>cell(value,j>=headings.length-3?'summary':i%2?'dark':'light')),18)).join('')+
+ '</Table><WorksheetOptions xmlns="urn:schemas-microsoft-com:office:excel"><PageSetup><Layout x:Orientation="Landscape"/></PageSetup><FitToPage/><Print><FitWidth>1</FitWidth><FitHeight>0</FitHeight></Print></WorksheetOptions></Worksheet></Workbook>';
 }
 $('export').onclick=()=>{
- if(monthReady()&&period.status==='published')downloadCsv(finalRoster(),'roster');
+ if(!monthReady()||period.status!=='published')return;
+ const url=URL.createObjectURL(new Blob([rosterWorkbook(finalRoster())],{type:'application/vnd.ms-excel'}));
+ const link=document.createElement('a');
+ link.href=url;
+ link.download='roster-'+$('month').value+'.xml';
+ link.click();
+ setTimeout(()=>URL.revokeObjectURL(url),1000);
 };
 $('printRoster').onclick=()=>{
  if(!monthReady()||period.status!=='published')return;
- const [head,...rows]=finalRoster();
- $('rosterPrint').innerHTML='<h2>الروستر النهائي · '+esc($('month').value)+'</h2><table><thead><tr>'+
- head.map(cell=>'<th>'+esc(cell)+'</th>').join('')+'</tr></thead><tbody>'+
- rows.map(row=>'<tr>'+row.map(cell=>'<td>'+esc(cell)+'</td>').join('')+'</tr>').join('')+'</tbody></table>';
+ const {headings,numbers,rows}=finalRoster();
+ $('rosterPrint').innerHTML='<h2>الروستر النهائي · '+esc($('month').value)+'</h2><table dir="ltr"><thead><tr>'+
+ headings.map((value,i)=>'<th>'+(i<2?esc(value):'<span class="vertical">'+esc(value)+'</span>')+'</th>').join('')+
+ '</tr><tr>'+numbers.map(value=>'<th>'+esc(value)+'</th>').join('')+'</tr></thead><tbody>'+
+ rows.map(row=>'<tr>'+row.map((value,i)=>'<td class="'+(i>=headings.length-3?'summary':'')+'" '+(i===1?'dir="rtl"':'')+'>'+esc(value)+'</td>').join('')+'</tr>').join('')+'</tbody></table>';
  document.body.classList.add('printing-roster');
  window.print();
 };
