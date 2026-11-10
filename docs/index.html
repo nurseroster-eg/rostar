@@ -8,10 +8,30 @@
 .calendar-day small{font-size:.7rem;color:#456479}.calendar-actions{display:flex;align-items:center;gap:10px;flex-wrap:wrap;margin-top:16px}
 .window-fields{display:flex;flex-wrap:wrap;align-items:center;gap:8px}
 @media(max-width:650px){#nurse{padding:10px}.calendar-grid{gap:3px}.calendar-day{padding:4px 2px}.calendar-day select{font-size:.75rem}.calendar-weekday{font-size:.65rem}}
+
+.roster-scroll{max-height:70vh;overflow:auto}
+.roster-grid{min-width:max-content}
+.roster-grid th,.roster-grid td{padding:7px 5px;white-space:nowrap}
+.roster-grid thead th{position:sticky;top:0;z-index:2}
+.roster-grid .roster-name{position:sticky;inset-inline-start:0;z-index:1;min-width:135px;background:#edf5f9;text-align:start}
+.roster-grid thead .roster-name{z-index:3}
+.roster-grid .preference-row td{background:#f1f7ff;color:#24528a}
+.roster-grid .assignment-row td{background:#f2faf6;border-bottom:2px solid #dae7e3}
+.roster-grid select{margin:0;padding:5px 3px;min-width:48px}
+.roster-grid select.suggested{border-color:#ba8a38;background:#fff8eb}
+#rosterPrint{display:none}
+@page{size:A4 landscape;margin:8mm}
+@media print{
+ body.printing-roster main,body.printing-roster header{display:none!important}
+ body.printing-roster #rosterPrint{display:block}
+ #rosterPrint table{width:100%;font-size:8pt;table-layout:fixed}
+ #rosterPrint th,#rosterPrint td{padding:3px 1px;border:1px solid #aaa;overflow-wrap:anywhere}
+ #rosterPrint th:first-child{width:19%}#rosterPrint tr{break-inside:avoid}
+}
 </style></head><body><header><b>🏥 NurseRoster — رغبات التمريض</b> <span id="identity"></span><button id="logout" class="hidden">خروج</button></header><main><p id="notice"></p><section id="login" class="card"><h2>تسجيل الدخول</h2><form id="loginForm"><input id="username" placeholder="اسم المستخدم أو البريد" required autocomplete="username"><input id="password" type="password" placeholder="كلمة المرور" required autocomplete="current-password"><button>دخول</button></form></section><section id="app" class="hidden"><div class="card"><input id="month" type="month"><button id="reload">تحديث</button><strong id="status"></strong></div><section id="nurse" class="card hidden"><div class="calendar-heading"><div><h2 id="calendarTitle">رغباتي</h2><p id="windowMessage" class="muted"></p></div></div>
 <form id="preferencesForm"><div id="calendarGrid" class="calendar-grid"></div>
 <div class="calendar-actions"><button id="savePreferences">حفظ كل الرغبات</button><span id="calendarHint" class="muted">اختار الشيفت للأيام المطلوبة، وبعدها احفظ مرة واحدة.</span></div>
-</form></section><section id="admin" class="hidden"><nav class="nav"><button class="active" data-tab="roster">📅 إدارة الروستر</button><button data-tab="users">👥 إدارة المستخدمين</button><button data-tab="departments">الأقسام</button><button data-tab="reports">التقارير</button><button data-tab="history">🕘 سجل التعديلات</button></nav><section id="tab-roster"><div class="stats"><div class="stat"><span class="muted">الممرضون</span><strong id="statNurses">0</strong></div><div class="stat"><span class="muted">رغبات الشهر</span><strong id="statPrefs">0</strong></div><div class="stat"><span class="muted">الشيفتات الموزعة</span><strong id="statAssign">0</strong></div></div><div class="card"><h2>لوحة المشرف</h2><select id="periodStatus"><option value="open">فتح الرغبات</option><option value="closed">إغلاق الرغبات</option><option value="published">نشر الروستر</option></select><div class="window-fields"><label>بداية استقبال الرغبات <input type="date" id="opensOn"></label><label>آخر يوم للاستقبال <input type="date" id="closesOn"></label><small class="muted">بتوقيت القاهرة. الشهر المختار فوق هو شهر الروستر.</small></div><button id="saveStatus">حفظ حالة الشهر</button><button id="export">تصدير CSV</button></div><div class="card scroll"><h2>الرغبات والتوزيع</h2><table><thead id="adminHead"></thead><tbody id="adminRows"></tbody></table></div></section><section id="tab-users" class="hidden"><div class="card"><h2>👥 إدارة المستخدمين</h2><p class="muted">إنشاء حسابات وتعديل بياناتها وصلاحياتها وأقسامها.</p><form id="createUserForm" class="user-tools">
+</form></section><section id="admin" class="hidden"><nav class="nav"><button class="active" data-tab="roster">📅 إدارة الروستر</button><button data-tab="users">👥 إدارة المستخدمين</button><button data-tab="departments">الأقسام</button><button data-tab="reports">التقارير</button><button data-tab="history">🕘 سجل التعديلات</button></nav><section id="tab-roster"><div class="stats"><div class="stat"><span class="muted">الممرضون</span><strong id="statNurses">0</strong></div><div class="stat"><span class="muted">رغبات الشهر</span><strong id="statPrefs">0</strong></div><div class="stat"><span class="muted">الشيفتات الموزعة</span><strong id="statAssign">0</strong></div></div><div class="card"><h2>لوحة المشرف</h2><select id="periodStatus"><option value="open">فتح الرغبات</option><option value="closed">إغلاق الرغبات</option><option value="published">نشر الروستر</option></select><div class="window-fields"><label>بداية استقبال الرغبات <input type="date" id="opensOn"></label><label>آخر يوم للاستقبال <input type="date" id="closesOn"></label><small class="muted">بتوقيت القاهرة. الشهر المختار فوق هو شهر الروستر.</small></div><button id="saveStatus">حفظ حالة الشهر</button><button id="saveRoster">حفظ الروستر</button><button id="printRoster">طباعة النهائي</button><button id="export">تصدير النهائي CSV</button></div><div class="card"><h2>رغبات التمريض والروستر</h2><p class="muted">السطر الأول رغبات الممرض. السطر التاني روستر المشرف، والخانات المظللة مقترحات من الرغبات لحد ما تحفظها.</p><div class="scroll roster-scroll"><table class="roster-grid"><thead id="adminHead"></thead><tbody id="adminRows"></tbody></table></div></div></section><section id="tab-users" class="hidden"><div class="card"><h2>👥 إدارة المستخدمين</h2><p class="muted">إنشاء حسابات وتعديل بياناتها وصلاحياتها وأقسامها.</p><form id="createUserForm" class="user-tools">
 <label>الاسم <input id="newFullName" required maxlength="120"></label>
 <label>اسم المستخدم أو البريد <input id="newLogin" required maxlength="254" autocomplete="off"></label>
 <label>كلمة المرور <input id="newPassword" type="password" required minlength="12" maxlength="72" autocomplete="new-password"></label>
@@ -29,7 +49,7 @@
 <label>القسم <select id="reportDepartment"></select></label><button id="exportReport">تصدير الملخص CSV</button>
 <div class="scroll"><table><thead><tr><th>الممرض</th><th>القسم</th><th>E</th><th>N</th><th>8</th><th>#</th><th>الإجمالي</th></tr></thead><tbody id="reportRows"></tbody></table></div>
 </section>
-<section id="tab-history" class="hidden"><div class="card scroll"><h2>سجل تعديلات المشرفين</h2><table><thead><tr><th>التاريخ والوقت</th><th>المشرف</th><th>الممرض</th><th>اليوم</th><th>قبل</th><th>بعد</th></tr></thead><tbody id="auditRows"></tbody></table></div></section></section></section></main><script type="module">
+<section id="tab-history" class="hidden"><div class="card scroll"><h2>سجل تعديلات المشرفين</h2><table><thead><tr><th>التاريخ والوقت</th><th>المشرف</th><th>الممرض</th><th>اليوم</th><th>قبل</th><th>بعد</th></tr></thead><tbody id="auditRows"></tbody></table></div></section></section></section></main><section id="rosterPrint" dir="rtl"></section><script type="module">
 import {createClient} from 'https://esm.sh/@supabase/supabase-js@2';
 import {SUPABASE_URL,SUPABASE_ANON_KEY} from './config.js';
 const $=id=>document.getElementById(id),esc=s=>String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;','\'':'&#39;'}[c]));
@@ -76,8 +96,38 @@ function renderNurse(){
    (period.status==='published'?'<small>الروستر: '+esc(assigned.get(day)||'—')+'</small>':'')+'</label>';
  }).join('');
 }
-function renderAdmin(){$('statNurses').textContent=people.length;$('statPrefs').textContent=prefs.length;$('statAssign').textContent=assign.length;const p=new Map(prefs.map(x=>[x.user_id+'|'+x.work_date,x.shift_code])),a=new Map(assign.map(x=>[x.user_id+'|'+x.work_date,x.shift_code]));$('periodStatus').value=period.status;$('opensOn').value=period.opens_on||'';$('closesOn').value=period.closes_on||'';$('adminHead').innerHTML='<tr><th>الممرض</th>'+dates().map(d=>'<th>'+d.slice(-2)+'</th>').join('')+'</tr>';$('adminRows').innerHTML=people.map(u=>'<tr><th>'+esc(u.full_name)+'</th>'+dates().map(d=>'<td><small>رغبة: '+esc(p.get(u.id+'|'+d)||'—')+'</small><br><select class="assignment" data-user="'+u.id+'" data-date="'+d+'" '+(period.status==='published'?'disabled':'')+'>'+opts(a.get(u.id+'|'+d),true)+'</select></td>').join('')+'</tr>').join('');}
-
+function renderAdmin(){
+ $('statNurses').textContent=people.length;
+ $('statPrefs').textContent=prefs.length;
+ $('statAssign').textContent=assign.length;
+ $('periodStatus').value=period.status;
+ $('opensOn').value=period.opens_on||'';
+ $('closesOn').value=period.closes_on||'';
+ const published=period.status==='published';
+ $('saveRoster').disabled=published;
+ $('printRoster').disabled=!published;
+ $('export').disabled=!published;
+ const days=dates();
+ const preferences=new Map(prefs.map(x=>[x.user_id+'|'+x.work_date,x.shift_code]));
+ const assignments=new Map(assign.map(x=>[x.user_id+'|'+x.work_date,x.shift_code]));
+ $('adminHead').innerHTML='<tr><th class="roster-name">الممرض</th><th>السطر</th>'+days.map(d=>'<th scope="col">'+d.slice(-2)+'</th>').join('')+'</tr>';
+ $('adminRows').innerHTML=people.map(user=>{
+  const requests=days.map(day=>'<td>'+esc(preferences.get(user.id+'|'+day)||'—')+'</td>').join('');
+  const edits=days.map(day=>{
+   const key=user.id+'|'+day;
+   const saved=assignments.get(key);
+   const suggestion=published?'':preferences.get(key);
+   const style=!saved&&suggestion?' suggested':'';
+   return '<td><select class="assignment'+style+'" aria-label="'+esc(user.full_name+' '+day)+'" data-user="'+esc(user.id)+'" data-date="'+day+'" data-saved="'+esc(saved||'')+'" '+(published?'disabled':'')+'>'+opts(saved||suggestion,!saved)+'</select></td>';
+  }).join('');
+  return '<tr class="preference-row"><th class="roster-name" rowspan="2" scope="rowgroup">'+esc(user.full_name)+'</th><th scope="row">الرغبات</th>'+requests+'</tr>'+
+   '<tr class="assignment-row"><th scope="row">الروستر</th>'+edits+'</tr>';
+ }).join('')||'<tr><td colspan="'+(days.length+2)+'">لا يوجد ممرضون في القائمة</td></tr>';
+}
+function rosterChanges(){
+ return [...$('adminRows').querySelectorAll('.assignment')].filter(input=>input.value&&input.value!==input.dataset.saved)
+  .map(input=>({user_id:input.dataset.user,work_date:input.dataset.date,shift_code:input.value}));
+}
 function renderUsers(){
  const q=$('userSearch').value.trim().toLowerCase();
  const filtered=allProfiles.filter(u=>(u.full_name+' '+(u.employee_no||'')).toLowerCase().includes(q));
@@ -124,6 +174,7 @@ $('saveStatus').onclick=async()=>{
   const opens_on=$('opensOn').value||null;
   const closes_on=$('closesOn').value||null;
   const status=$('periodStatus').value;
+  if(status==='published'&&period.status!=='published'&&rosterChanges().length)throw Error('احفظ الروستر أولاً، ثم اختر نشر الروستر');
   if((!!opens_on!==!!closes_on)||(opens_on&&opens_on>closes_on)||(status==='open'&&!opens_on)){
    throw Error('حدد بداية ونهاية صحيحة لاستقبال الرغبات');
   }
@@ -132,7 +183,17 @@ $('saveStatus').onclick=async()=>{
   note('تم حفظ حالة الشهر وفترة الاستقبال');
  }catch(err){note(err.message);}
 };
-$('adminRows').onchange=async e=>{if(!e.target.matches('.assignment')||!e.target.value)return;try{await check(await db.from('assignments').upsert({user_id:e.target.dataset.user,work_date:e.target.dataset.date,shift_code:e.target.value},{onConflict:'user_id,work_date'}));note('تم حفظ التعديل وتسجيل المشرف');await load();}catch(err){note(err.message);}};
+$('saveRoster').onclick=async()=>{
+ const changes=rosterChanges();
+ if(!changes.length){note('مفيش تغييرات للحفظ');return;}
+ const button=$('saveRoster');
+ button.disabled=true;
+ try{
+  await check(await db.from('assignments').upsert(changes,{onConflict:'user_id,work_date'}));
+  await load();
+  note('تم حفظ '+changes.length+' شيفت في الروستر');
+ }catch(err){note('تعذر حفظ الروستر: '+err.message);button.disabled=false;}
+};
 function departmentOptions(selected,label){
  return '<option value="">'+label+'</option>'+departments.map(d=>
   '<option value="'+esc(d.id)+'" '+(String(d.id)===String(selected)?'selected':'')+'>'+esc(d.name)+'</option>'
@@ -227,10 +288,25 @@ function downloadCsv(rows,filename){
  setTimeout(()=>URL.revokeObjectURL(url),1000);
 }
 $('exportReport').onclick=()=>downloadCsv([reportHeader,...reportData()],'shift-summary');
-$('export').onclick=()=>{
+function finalRoster(){
  const byDay=new Map(assign.map(x=>[x.user_id+'|'+x.work_date,x.shift_code]));
  const days=dates();
- downloadCsv([['الممرض',...days],...people.map(u=>[u.full_name,...days.map(d=>byDay.get(u.id+'|'+d)||'')])],'roster');
+ return [['الممرض',...days.map(day=>day.slice(-2))],...people.map(user=>[
+  user.full_name,...days.map(day=>byDay.get(user.id+'|'+day)||'')
+ ])];
+}
+$('export').onclick=()=>{
+ if(period.status==='published')downloadCsv(finalRoster(),'roster');
 };
+$('printRoster').onclick=()=>{
+ if(period.status!=='published')return;
+ const [head,...rows]=finalRoster();
+ $('rosterPrint').innerHTML='<h2>الروستر النهائي · '+esc($('month').value)+'</h2><table><thead><tr>'+
+ head.map(cell=>'<th>'+esc(cell)+'</th>').join('')+'</tr></thead><tbody>'+
+ rows.map(row=>'<tr>'+row.map(cell=>'<td>'+esc(cell)+'</td>').join('')+'</tr>').join('')+'</tbody></table>';
+ document.body.classList.add('printing-roster');
+ window.print();
+};
+window.addEventListener('afterprint',()=>document.body.classList.remove('printing-roster'));
 if(SUPABASE_URL.startsWith('YOUR_')||SUPABASE_ANON_KEY.startsWith('YOUR_')){note('لازم تضبط docs/config.js ببيانات Supabase الأول.');}else{db=createClient(SUPABASE_URL,SUPABASE_ANON_KEY);session().catch(e=>note(e.message));}
 </script></body></html>
