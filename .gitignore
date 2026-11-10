@@ -1,0 +1,12 @@
+.env
+.env.*
+!.env.example
+/vendor/
+/node_modules/
+/storage/app/imports/
+*.xlsx
+*.xls
+*.csv
+/database/*.sqlite
+/public/storage
+/storage/logs/*
