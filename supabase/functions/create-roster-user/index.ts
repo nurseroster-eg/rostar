@@ -1,6 +1,6 @@
 import { createClient } from "npm:@supabase/supabase-js@2";
 
-const origin = "https://khaledmoon64.github.io";
+const origin = "https://nurseroster-eg.github.io";
 const headers = {
   "Access-Control-Allow-Origin": origin,
   "Access-Control-Allow-Headers": "authorization, x-client-info, apikey, content-type",
