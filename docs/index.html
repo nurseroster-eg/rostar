@@ -51,7 +51,7 @@
 </form></section><section id="app" class="hidden"><div class="card"><label>شهر الروستر <input id="month" type="month" required></label><button id="reload">تحديث</button><strong id="status"></strong></div><section id="nurse" class="card hidden"><div class="calendar-heading"><div><h2 id="calendarTitle">رغباتي</h2><p id="windowMessage" class="muted"></p></div></div>
 <form id="preferencesForm"><div id="calendarGrid" class="calendar-grid"></div>
 <div class="calendar-actions"><button id="savePreferences">حفظ كل الرغبات</button><span id="calendarHint" class="muted">اختار الشيفت للأيام المطلوبة، وبعدها احفظ مرة واحدة.</span></div>
-</form></section><section id="admin" class="hidden"><nav class="nav"><button class="active" data-tab="roster">📅 إدارة الروستر</button><button data-tab="users">👥 إدارة المستخدمين</button><button data-tab="departments">الأقسام</button><button data-tab="archive">الأرشيف</button><button data-tab="reports">التقارير</button><button data-tab="history">🕘 سجل التعديلات</button></nav><section id="tab-roster"><div class="stats"><div class="stat"><span class="muted">الممرضون</span><strong id="statNurses">0</strong></div><div class="stat"><span class="muted">رغبات الشهر</span><strong id="statPrefs">0</strong></div><div class="stat"><span class="muted">الشيفتات الموزعة</span><strong id="statAssign">0</strong></div></div><div class="card"><h2>لوحة المشرف</h2><select id="periodStatus"><option value="open">فتح الرغبات</option><option value="closed">إغلاق الرغبات</option><option value="published">نشر الروستر</option></select><div class="window-fields"><label>بداية استقبال الرغبات <input type="date" id="opensOn"></label><label>آخر يوم للاستقبال <input type="date" id="closesOn"></label><small class="muted">بتوقيت القاهرة. الشهر المختار فوق هو شهر الروستر.</small></div><p id="rosterGuide" class="muted" aria-live="polite"></p><button id="saveStatus">حفظ حالة الشهر</button><button id="saveRoster">حفظ الروستر</button><button id="printRoster">طباعة النهائي</button><button id="export">تصدير النهائي Excel</button></div><div class="card"><h2>رغبات التمريض والروستر</h2><p class="muted">السطر الأول رغبات الممرض. السطر التاني روستر المشرف، والخانات المظللة مقترحات من الرغبات لحد ما تحفظها.</p><div class="scroll roster-scroll"><table class="roster-grid"><thead id="adminHead"></thead><tbody id="adminRows"></tbody></table></div></div></section><section id="tab-users" class="hidden"><div class="card"><h2>👥 إدارة المستخدمين</h2><p class="muted">إنشاء حسابات وتعديل بياناتها وصلاحياتها وأقسامها.</p><form id="createUserForm" class="user-tools">
+</form></section><section id="admin" class="hidden"><nav class="nav"><button class="active" data-tab="roster">📅 إدارة الروستر</button><button data-tab="personal">رغباتي</button><button data-tab="users">👥 إدارة المستخدمين</button><button data-tab="departments">الأقسام</button><button data-tab="archive">الأرشيف</button><button data-tab="reports">التقارير</button><button data-tab="history">🕘 سجل التعديلات</button></nav><section id="tab-personal" class="hidden"></section><section id="tab-roster"><div class="stats"><div class="stat"><span class="muted">أفراد الروستر</span><strong id="statNurses">0</strong></div><div class="stat"><span class="muted">رغبات الشهر</span><strong id="statPrefs">0</strong></div><div class="stat"><span class="muted">الشيفتات الموزعة</span><strong id="statAssign">0</strong></div></div><div class="card"><h2>لوحة المشرف</h2><select id="periodStatus"><option value="open">فتح الرغبات</option><option value="closed">إغلاق الرغبات</option><option value="published">نشر الروستر</option></select><div class="window-fields"><label>بداية استقبال الرغبات <input type="date" id="opensOn"></label><label>آخر يوم للاستقبال <input type="date" id="closesOn"></label><small class="muted">بتوقيت القاهرة. الشهر المختار فوق هو شهر الروستر.</small></div><p id="rosterGuide" class="muted" aria-live="polite"></p><button id="saveStatus">حفظ حالة الشهر</button><button id="saveRoster">حفظ الروستر</button><button id="printRoster">طباعة النهائي</button><button id="export">تصدير النهائي Excel</button></div><div class="card"><h2>رغبات التمريض والروستر</h2><p class="muted">السطر الأول رغبات الممرض. السطر التاني روستر المشرف، والخانات المظللة مقترحات من الرغبات لحد ما تحفظها.</p><div class="scroll roster-scroll"><table class="roster-grid"><thead id="adminHead"></thead><tbody id="adminRows"></tbody></table></div></div></section><section id="tab-users" class="hidden"><div class="card"><h2>👥 إدارة المستخدمين</h2><p class="muted">إنشاء حسابات وتعديل بياناتها وصلاحياتها وأقسامها.</p><form id="createUserForm" class="user-tools">
 <label>الاسم <input id="newFullName" required maxlength="120"></label>
 <label>اسم المستخدم أو البريد <input id="newLogin" required maxlength="254" autocomplete="off"></label>
 <label>كلمة المرور <input id="newPassword" type="password" required minlength="12" maxlength="72" autocomplete="new-password"></label>
@@ -94,7 +94,10 @@ $('month').value=new Date().toLocaleDateString('en-CA').slice(0,7);
 const dates=()=>{const [y,m]=$('month').value.split('-').map(Number);return Array.from({length:new Date(y,m,0).getDate()},(_,i)=>$('month').value+'-'+String(i+1).padStart(2,'0'));};
 const opts=(v,empty=false)=>(empty?'<option value="">—</option>':'')+codes.map(c=>'<option '+(c===v?'selected':'')+'>'+c+'</option>').join('');
 async function check(res){if(res.error)throw res.error;return res.data;}
-async function session(){const {data:{user}}=await db.auth.getUser();me=user;show('login',!me);show('app',!!me);show('logout',!!me);if(!me)return;profile=await check(await db.from('profiles').select('*').eq('id',me.id).single());$('identity').textContent=' | '+profile.full_name;show('nurse',profile.role==='nurse');show('admin',profile.role==='admin');await load();}
+async function session(){const {data:{user}}=await db.auth.getUser();me=user;show('login',!me);show('app',!!me);show('logout',!!me);if(!me)return;profile=await check(await db.from('profiles').select('*').eq('id',me.id).single());$('identity').textContent=' | '+profile.full_name;const supervisor=profile.role==='admin';
+ if(supervisor)$('tab-personal').append($('nurse'));
+ else $('app').insertBefore($('nurse'),$('admin'));
+ show('nurse',true);show('admin',supervisor);await load();}
 async function readAll(query, order){
  const rows=[];
  for(let start=0;;start+=500){
@@ -126,7 +129,7 @@ async function load(){
   const configured=await check(p);
   period=configured||{month:first,status:'closed'};
   prefs=pr;assign=a;allProfiles=us;departments=depts;
-  people=allProfiles.filter(x=>x.role==='nurse');
+  people=allProfiles;
   loadedMonth=month;
   const label={open:preferencesOpen()?'استقبال الرغبات مفتوح':'خارج فترة استقبال الرغبات',closed:'الرغبات مغلقة',published:'الروستر منشور'};
   $('status').textContent=configured?label[period.status]:'الشهر لسه مش متجهز';
@@ -139,7 +142,8 @@ async function load(){
     $('rosterGuide').textContent='احفظ حالة الشهر أولاً عشان تبدأ توزيع الشيفتات.';
    }
    audit().catch(err=>note('تعذر تحميل سجل التعديلات: '+err.message));
-  }else renderNurse();
+  }
+  renderNurse();
  }catch(err){
   if(version!==loadVersion)return;
   $('status').textContent='تعذر تحميل الشهر';
@@ -156,8 +160,8 @@ function renderNurse(){
  const days=dates();
  const first=new Date(days[0]+'T12:00:00Z');
  const weekdayOffset=(first.getUTCDay()+1)%7;
- const saved=new Map(prefs.map(x=>[x.work_date,x.shift_code]));
- const assigned=new Map(assign.map(x=>[x.work_date,x.shift_code]));
+ const saved=new Map(prefs.filter(x=>x.user_id===me.id).map(x=>[x.work_date,x.shift_code]));
+ const assigned=new Map(assign.filter(x=>x.user_id===me.id).map(x=>[x.work_date,x.shift_code]));
  const open=preferencesOpen();
  $('calendarTitle').textContent='رغباتي · '+first.toLocaleDateString('ar-EG',{month:'long',year:'numeric',timeZone:'UTC'});
  const range=period.opens_on?' من '+period.opens_on+' إلى '+period.closes_on+' بتوقيت القاهرة':'';
@@ -199,7 +203,7 @@ function renderAdmin(){
    const style=!saved&&suggestion?' suggested':'';
    return '<td><select class="assignment'+style+'" aria-label="'+esc(user.full_name+' '+day)+'" data-user="'+esc(user.id)+'" data-date="'+day+'" data-saved="'+esc(saved||'')+'" '+(published?'disabled':'')+'>'+opts(saved||suggestion,!saved)+'</select></td>';
   }).join('');
-  return '<tr class="preference-row"><th class="roster-name" rowspan="2" scope="rowgroup">'+esc(user.full_name)+'</th><th scope="row">الرغبات</th>'+requests+'</tr>'+
+  return '<tr class="preference-row"><th class="roster-name" rowspan="2" scope="rowgroup">'+esc(user.full_name)+(user.role==='admin'?' <small>(مشرف)</small>':'')+'</th><th scope="row">الرغبات</th>'+requests+'</tr>'+
    '<tr class="assignment-row"><th scope="row">الروستر</th>'+edits+'</tr>';
  }).join('')||'<tr><td colspan="'+(days.length+2)+'">لا يوجد ممرضون في القائمة</td></tr>';
 }
@@ -216,7 +220,7 @@ $('userSearch').oninput=()=>renderUsers();
 $('refreshUsers').onclick=()=>load().catch(e=>note(e.message));
 document.querySelectorAll('[data-tab]').forEach(b=>b.onclick=()=>{
  document.querySelectorAll('[data-tab]').forEach(x=>x.classList.toggle('active',x===b));
- ['roster','users','departments','archive','reports','history'].forEach(x=>show('tab-'+x,x===b.dataset.tab));
+ ['roster','personal','users','departments','archive','reports','history'].forEach(x=>show('tab-'+x,x===b.dataset.tab));
  if(b.dataset.tab==='archive')loadArchive();
 });
 $('usersRows').onclick=async e=>{
@@ -289,7 +293,7 @@ $('reload').onclick=()=>load().catch(e=>note(e.message));$('month').onchange=$('
 $('preferencesForm').onsubmit=async e=>{
  e.preventDefault();
  if(!monthReady()||!preferencesOpen()){note('فترة استقبال الرغبات مغلقة');return;}
- const saved=new Map(prefs.map(x=>[x.work_date,x.shift_code]));
+ const saved=new Map(prefs.filter(x=>x.user_id===me.id).map(x=>[x.work_date,x.shift_code]));
  const changes=[...$('calendarGrid').querySelectorAll('select[data-date]')]
   .filter(input=>input.value&&saved.get(input.dataset.date)!==input.value)
   .map(input=>({user_id:me.id,work_date:input.dataset.date,shift_code:input.value}));
