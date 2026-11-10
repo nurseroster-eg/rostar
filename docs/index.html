@@ -39,6 +39,13 @@
 <label>القسم <select id="newDepartment"></select></label>
 <button>إنشاء حساب</button>
 </form>
+<form id="importUsersForm" class="user-tools">
+<label>ملف حسابات CSV <input id="importUsersFile" type="file" accept=".csv,text/csv" required></label>
+<button>استيراد حسابات</button>
+<button id="exportUsers" type="button">تصدير المستخدمين CSV</button>
+</form>
+<p class="muted">احفظ شيت Excel بصيغة CSV UTF-8. الأعمدة بالترتيب: الاسم، اسم المستخدم، كلمة المرور. الحسابات المستوردة بصلاحية ممرض.</p>
+<ul id="importResults" aria-live="polite"></ul>
 <div class="user-tools"><input id="userSearch" placeholder="بحث بالاسم أو الرقم الوظيفي"><button id="refreshUsers">تحديث</button><a href="https://supabase.com/dashboard/project/knvxfyalfqqklpiwcwor/auth/users" target="_blank" rel="noopener">حسابات Supabase ↗</a></div><div class="scroll"><table><thead><tr><th>الاسم</th><th>الرقم الوظيفي</th><th>الصلاحية</th><th>القسم</th><th>الإجراء</th></tr></thead><tbody id="usersRows"></tbody></table></div></div></section><section id="tab-departments" class="card hidden">
 <h2>الأقسام</h2>
 <form id="departmentForm"><label>اسم القسم <input id="departmentName" required maxlength="100"></label><button>إضافة قسم</button></form>
@@ -253,6 +260,12 @@ function renderDepartments(){
  const selected=filter.value;
  filter.innerHTML=departmentOptions(selected,'كل الأقسام');
 }
+async function createRosterUser(body){
+ const {error}=await db.functions.invoke('create-roster-user',{body});
+ if(!error)return;
+ const details=await error.context?.json?.().catch(()=>null);
+ throw Error(details?.error||'تعذر الاتصال بخدمة إنشاء الحسابات');
+}
 $('createUserForm').onsubmit=async e=>{
  e.preventDefault();
  const role=$('newRole').value;
@@ -260,21 +273,101 @@ $('createUserForm').onsubmit=async e=>{
  const button=e.submitter;
  button.disabled=true;
  try{
-  const {error}=await db.functions.invoke('create-roster-user',{body:{
+  await createRosterUser({
    full_name:$('newFullName').value,
    login:$('newLogin').value,
    password:$('newPassword').value,
    role,
    department_id:$('newDepartment').value||null
-  }});
-  if(error){
-   const details=await error.context?.json?.().catch(()=>null);
-   throw Error(details?.error||'تعذر إنشاء الحساب. تحقق من اتصال خدمة إنشاء المستخدمين.');
-  }
+  });
   e.target.reset();
   await load();
   note('تم إنشاء الحساب');
  }catch(err){note(err.message);}
+ finally{button.disabled=false;}
+};
+function parseUserCsv(text){
+ const source=text.replace(/^\uFEFF/,'');
+ const firstLine=source.split(/\r?\n/,1)[0];
+ const delimiter=firstLine.includes(';')?';':',';
+ const rows=[];
+ let row=[], field='', quoted=false, closed=false;
+ for(let i=0;i<source.length;i++){
+  const char=source[i];
+  if(quoted){
+   if(char==='"'&&source[i+1]==='"'){field+='"';i++;}
+   else if(char==='"'){quoted=false;closed=true;}
+   else field+=char;
+   continue;
+  }
+  if(char===delimiter){row.push(field);field='';closed=false;}
+  else if(char==='\r'||char==='\n'){
+   if(char==='\r'&&source[i+1]==='\n')i++;
+   rows.push([...row,field]);row=[];field='';closed=false;
+  }else if(char==='"'&&!field&&!closed)quoted=true;
+  else if(closed||char==='"')throw Error('راجع علامات الاقتباس في ملف CSV');
+  else field+=char;
+ }
+ if(quoted)throw Error('ملف CSV فيه خانة اقتباس غير مكتملة');
+ if(row.length||field||closed)rows.push([...row,field]);
+ const header=rows.shift()?.map(x=>x.trim());
+ if(!header||header.length!==3||!['الاسم','Name','name'].includes(header[0])||
+    !['اسم المستخدم','Username','username','اليوزر نيم'].includes(header[1])||
+    !['كلمة المرور','Password','password','الباسورد'].includes(header[2])){
+  throw Error('استخدم أعمدة القالب بالترتيب: الاسم، اسم المستخدم، كلمة المرور');
+ }
+ return rows.map((values,i)=>({values,line:i+2})).filter(row=>row.values.some(value=>value.trim()));
+}
+$('importUsersForm').onsubmit=async e=>{
+ e.preventDefault();
+ if(profile?.role!=='admin')return;
+ const file=$('importUsersFile').files[0];
+ if(!file)return;
+ const button=e.submitter;
+ const results=$('importResults');
+ button.disabled=true;
+ results.replaceChildren();
+ try{
+  if(file.size>1024*1024)throw Error('الحد الأقصى لحجم الملف 1 ميجابايت');
+  const rows=parseUserCsv(await file.text());
+  if(!rows.length||rows.length>200)throw Error('الملف لازم يكون فيه من حساب واحد لحد 200 حساب');
+  if(!confirm('استيراد '+rows.length+' حساب بصلاحية ممرض؟'))return;
+  let created=0;
+  for(const {values,line} of rows){
+   const [name='',login='',password='']=values;
+   note('جاري معالجة الصف '+line+'…');
+   try{
+    if(values.length!==3||!name.trim()||!login.trim()||password.length<12||password.length>72)throw Error('راجع الاسم واسم المستخدم وكلمة المرور (12–72 حرف)');
+    await createRosterUser({full_name:name.trim(),login:login.trim(),password,role:'nurse'});
+    created++;
+   }catch(err){
+    const item=document.createElement('li');
+    item.textContent='الصف '+line+' — '+err.message;
+    results.append(item);
+   }
+  }
+  e.target.reset();
+  if(created)await load();
+  note('تم إنشاء '+created+' من '+rows.length+' حساب');
+ }catch(err){note(err.message);}
+ finally{button.disabled=false;}
+};
+$('exportUsers').onclick=async()=>{
+ if(profile?.role!=='admin')return;
+ const button=$('exportUsers');
+ button.disabled=true;
+ try{
+  const [users,logins,sections]=await Promise.all([
+   readAll(db.from('profiles').select('*').order('full_name'),'id'),
+   readAll(db.rpc('roster_user_logins'),'user_id'),
+   readAll(db.from('departments').select('id,name'),'id')
+  ]);
+  const loginById=new Map(logins.map(row=>[row.user_id,row.login]));
+  const departmentById=new Map(sections.map(row=>[row.id,row.name]));
+  downloadCsv([['الاسم','اسم المستخدم','الرقم الوظيفي','الصلاحية','القسم'],...users.map(user=>[
+   user.full_name,loginById.get(user.id)||'',user.employee_no||'',user.role==='admin'?'مدير':'ممرض',departmentById.get(user.department_id)||''
+  ])],'nurse-roster-users');
+ }catch(err){note('تعذر تصدير المستخدمين: '+err.message);}
  finally{button.disabled=false;}
 };
 async function saveDepartment(name,id){
@@ -329,7 +422,7 @@ function downloadCsv(rows,filename){
  const url=URL.createObjectURL(new Blob([csv],{type:'text/csv;charset=utf-8'}));
  const link=document.createElement('a');
  link.href=url;
- link.download=filename+'-'+$('month').value+'.csv';
+ link.download=filename+'-'+(filename==='nurse-roster-users'?cairoDate():$('month').value)+'.csv';
  link.click();
  setTimeout(()=>URL.revokeObjectURL(url),1000);
 }
