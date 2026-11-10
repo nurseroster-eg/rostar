@@ -36,7 +36,14 @@
  #rosterPrint table{print-color-adjust:exact;-webkit-print-color-adjust:exact}
  #rosterPrint h2{font-size:13pt;text-align:right;margin:0 0 3mm}
 }
-</style></head><body><header><b>🏥 NurseRoster — رغبات التمريض</b> <span id="identity"></span><button id="logout" class="hidden">خروج</button></header><main><p id="notice" role="status"></p><section id="login" class="card"><h2>تسجيل الدخول</h2><form id="loginForm"><input id="username" placeholder="اسم المستخدم أو البريد" required autocomplete="username"><input id="password" type="password" placeholder="كلمة المرور" required autocomplete="current-password"><label><input id="rememberLogin" type="checkbox"> تذكرني على الجهاز ده</label><button>دخول</button><button id="forgotPassword" type="button">نسيت كلمة المرور</button></form>
+</style></head><body><header><b>🏥 NurseRoster — رغبات التمريض</b> <span id="identity"></span><button id="logout" class="hidden">خروج</button></header><main><p id="notice" role="status"></p><section id="login" class="card"><h2>تسجيل الدخول</h2><form id="loginForm"><input id="username" placeholder="اسم المستخدم أو البريد" required autocomplete="username"><input id="password" type="password" placeholder="كلمة المرور" required autocomplete="current-password"><label><input id="rememberLogin" type="checkbox"> تذكرني على الجهاز ده</label><button>دخول</button><button id="openEnrollment" type="button">تفعيل حساب موظف</button><button id="forgotPassword" type="button">نسيت كلمة المرور</button></form>
+<form id="enrollmentForm" class="hidden">
+<h3>تفعيل حساب موظف</h3>
+<label>الرقم الوظيفي <input id="enrollmentNumber" required maxlength="40"></label>
+<label>اسم المستخدم <input id="enrollmentLogin" required pattern="[A-Za-z0-9_\-]{3,40}" autocomplete="username"></label>
+<label>كلمة المرور <input id="enrollmentPassword" type="password" required minlength="12" maxlength="72" autocomplete="new-password"></label>
+<button>إرسال طلب التفعيل</button><button id="backFromEnrollment" type="button">رجوع</button>
+</form>
 <form id="recoveryRequest" class="hidden">
 <h3>استعادة كلمة المرور</h3>
 <label>البريد المسجل <input id="recoveryEmail" type="email" required autocomplete="email"></label>
@@ -59,6 +66,9 @@
 <label>القسم <select id="newDepartment"></select></label>
 <button>إنشاء حساب</button>
 </form>
+<details class="card"><summary>طلبات تفعيل الموظفين</summary>
+<button id="loadEnrollmentRequests" type="button">عرض الطلبات</button>
+<ul id="enrollmentRequests" aria-live="polite"></ul></details>
 <form id="importUsersForm" class="user-tools">
 <label>ملف حسابات CSV <input id="importUsersFile" type="file" accept=".csv,text/csv" required></label>
 <button>استيراد حسابات</button>
@@ -269,8 +279,52 @@ const recoveryKey='roster-password-recovery';
 const recoveryLink=new URL(location.href).searchParams.get('recovery')==='1';
 const inRecovery=()=>recoveryLink||sessionStorage.getItem(recoveryKey)==='1';
 function showLoginPanel(panel){
- for(const id of ['loginForm','recoveryRequest','changePassword'])show(id,id===panel);
+ for(const id of ['loginForm','enrollmentForm','recoveryRequest','changePassword'])show(id,id===panel);
 }
+async function enrollmentCall(body){
+ const {data,error}=await db.functions.invoke('employee-enrollment',{body});
+ if(error){
+  const details=await error.context?.json?.().catch(()=>null);
+  throw Error(details?.error||'تعذر تنفيذ الطلب. راجع صلاحيتك أو اتصل بمدير النظام.');
+ }
+ return data;
+}
+$('openEnrollment').onclick=()=>{showLoginPanel('enrollmentForm');note('');};
+$('backFromEnrollment').onclick=()=>{showLoginPanel('loginForm');note('');};
+$('enrollmentForm').onsubmit=async e=>{
+ e.preventDefault();
+ e.submitter.disabled=true;
+ try{
+  const result=await enrollmentCall({action:'register',employee_no:$('enrollmentNumber').value,
+   login:$('enrollmentLogin').value,password:$('enrollmentPassword').value});
+  e.target.reset();
+  showLoginPanel('loginForm');
+  note(result.message);
+ }catch(err){note(err.message);}
+ finally{e.submitter.disabled=false;}
+};
+$('loadEnrollmentRequests').onclick=async()=>{
+ const list=$('enrollmentRequests');
+ list.replaceChildren();
+ try{
+  const {requests}=await enrollmentCall({action:'list'});
+  if(!requests.length){list.textContent='لا توجد طلبات للمراجعة';return;}
+  for(const request of requests){
+   const item=document.createElement('li');
+   item.textContent=request.full_name+' — '+request.employee_no+' — '+request.requested_login;
+   const approve=document.createElement('button');
+   approve.textContent='موافقة';
+   approve.onclick=async()=>{
+    if(!confirm('اتأكدت إن صاحب الرقم الوظيفي هو اللي قدم الطلب؟'))return;
+    approve.disabled=true;
+    try{await enrollmentCall({action:'approve',employee_no:request.employee_no});item.remove();note('تم تفعيل الحساب');}
+    catch(err){note(err.message);approve.disabled=false;}
+   };
+   item.append(approve);
+   list.append(item);
+  }
+ }catch(err){list.textContent=err.message;}
+};
 $('rememberLogin').checked=rememberSession();
 $('forgotPassword').onclick=()=>{
  const login=$('username').value.trim();
