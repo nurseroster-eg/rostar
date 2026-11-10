@@ -10,3 +10,15 @@
 9. Test with dummy accounts before importing real employee data. Use Supabase backups/export, restrict admin access, and enable MFA for supervisors if available.
 
 GitHub Pages hosts static UI only. Supabase stores the users and preferences. Free tier has limits and may pause inactive projects. This is an MVP, not a production-tested clinical staffing system.
+
+## Create accounts from NurseRoster
+Deploy the `create-roster-user` Supabase Edge Function before using the account form.
+From the repository root, with an authenticated Supabase CLI:
+
+```sh
+supabase functions deploy create-roster-user --project-ref knvxfyalfqqklpiwcwor
+```
+
+The function uses the Supabase-provided server environment. The browser sends the
+signed-in user's access token, and the function verifies the caller's current
+admin role before creating a confirmed account. Use the Nurse role by default.
