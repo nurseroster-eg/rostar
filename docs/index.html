@@ -39,7 +39,7 @@
 </style></head><body><header><b>🏥 NurseRoster — رغبات التمريض</b> <span id="identity"></span><button id="logout" class="hidden">خروج</button></header><main><p id="notice" role="status"></p><section id="login" class="card"><h2>تسجيل الدخول</h2><form id="loginForm"><input id="username" placeholder="اسم المستخدم أو البريد" required autocomplete="username"><input id="password" type="password" placeholder="كلمة المرور" required autocomplete="current-password"><button>دخول</button></form></section><section id="app" class="hidden"><div class="card"><label>شهر الروستر <input id="month" type="month" required></label><button id="reload">تحديث</button><strong id="status"></strong></div><section id="nurse" class="card hidden"><div class="calendar-heading"><div><h2 id="calendarTitle">رغباتي</h2><p id="windowMessage" class="muted"></p></div></div>
 <form id="preferencesForm"><div id="calendarGrid" class="calendar-grid"></div>
 <div class="calendar-actions"><button id="savePreferences">حفظ كل الرغبات</button><span id="calendarHint" class="muted">اختار الشيفت للأيام المطلوبة، وبعدها احفظ مرة واحدة.</span></div>
-</form></section><section id="admin" class="hidden"><nav class="nav"><button class="active" data-tab="roster">📅 إدارة الروستر</button><button data-tab="users">👥 إدارة المستخدمين</button><button data-tab="departments">الأقسام</button><button data-tab="reports">التقارير</button><button data-tab="history">🕘 سجل التعديلات</button></nav><section id="tab-roster"><div class="stats"><div class="stat"><span class="muted">الممرضون</span><strong id="statNurses">0</strong></div><div class="stat"><span class="muted">رغبات الشهر</span><strong id="statPrefs">0</strong></div><div class="stat"><span class="muted">الشيفتات الموزعة</span><strong id="statAssign">0</strong></div></div><div class="card"><h2>لوحة المشرف</h2><select id="periodStatus"><option value="open">فتح الرغبات</option><option value="closed">إغلاق الرغبات</option><option value="published">نشر الروستر</option></select><div class="window-fields"><label>بداية استقبال الرغبات <input type="date" id="opensOn"></label><label>آخر يوم للاستقبال <input type="date" id="closesOn"></label><small class="muted">بتوقيت القاهرة. الشهر المختار فوق هو شهر الروستر.</small></div><p id="rosterGuide" class="muted" aria-live="polite"></p><button id="saveStatus">حفظ حالة الشهر</button><button id="saveRoster">حفظ الروستر</button><button id="printRoster">طباعة النهائي</button><button id="export">تصدير النهائي Excel</button></div><div class="card"><h2>رغبات التمريض والروستر</h2><p class="muted">السطر الأول رغبات الممرض. السطر التاني روستر المشرف، والخانات المظللة مقترحات من الرغبات لحد ما تحفظها.</p><div class="scroll roster-scroll"><table class="roster-grid"><thead id="adminHead"></thead><tbody id="adminRows"></tbody></table></div></div></section><section id="tab-users" class="hidden"><div class="card"><h2>👥 إدارة المستخدمين</h2><p class="muted">إنشاء حسابات وتعديل بياناتها وصلاحياتها وأقسامها.</p><form id="createUserForm" class="user-tools">
+</form></section><section id="admin" class="hidden"><nav class="nav"><button class="active" data-tab="roster">📅 إدارة الروستر</button><button data-tab="users">👥 إدارة المستخدمين</button><button data-tab="departments">الأقسام</button><button data-tab="archive">الأرشيف</button><button data-tab="reports">التقارير</button><button data-tab="history">🕘 سجل التعديلات</button></nav><section id="tab-roster"><div class="stats"><div class="stat"><span class="muted">الممرضون</span><strong id="statNurses">0</strong></div><div class="stat"><span class="muted">رغبات الشهر</span><strong id="statPrefs">0</strong></div><div class="stat"><span class="muted">الشيفتات الموزعة</span><strong id="statAssign">0</strong></div></div><div class="card"><h2>لوحة المشرف</h2><select id="periodStatus"><option value="open">فتح الرغبات</option><option value="closed">إغلاق الرغبات</option><option value="published">نشر الروستر</option></select><div class="window-fields"><label>بداية استقبال الرغبات <input type="date" id="opensOn"></label><label>آخر يوم للاستقبال <input type="date" id="closesOn"></label><small class="muted">بتوقيت القاهرة. الشهر المختار فوق هو شهر الروستر.</small></div><p id="rosterGuide" class="muted" aria-live="polite"></p><button id="saveStatus">حفظ حالة الشهر</button><button id="saveRoster">حفظ الروستر</button><button id="printRoster">طباعة النهائي</button><button id="export">تصدير النهائي Excel</button></div><div class="card"><h2>رغبات التمريض والروستر</h2><p class="muted">السطر الأول رغبات الممرض. السطر التاني روستر المشرف، والخانات المظللة مقترحات من الرغبات لحد ما تحفظها.</p><div class="scroll roster-scroll"><table class="roster-grid"><thead id="adminHead"></thead><tbody id="adminRows"></tbody></table></div></div></section><section id="tab-users" class="hidden"><div class="card"><h2>👥 إدارة المستخدمين</h2><p class="muted">إنشاء حسابات وتعديل بياناتها وصلاحياتها وأقسامها.</p><form id="createUserForm" class="user-tools">
 <label>الاسم <input id="newFullName" required maxlength="120"></label>
 <label>اسم المستخدم أو البريد <input id="newLogin" required maxlength="254" autocomplete="off"></label>
 <label>كلمة المرور <input id="newPassword" type="password" required minlength="12" maxlength="72" autocomplete="new-password"></label>
@@ -59,10 +59,17 @@
 <form id="departmentForm"><label>اسم القسم <input id="departmentName" required maxlength="100"></label><button>إضافة قسم</button></form>
 <div class="scroll"><table><thead><tr><th>اسم القسم</th><th>الإجراء</th></tr></thead><tbody id="departmentRows"></tbody></table></div>
 </section>
+<section id="tab-archive" class="card hidden">
+<h2>أرشيف الروسترات المنشورة</h2>
+<p class="muted">اختار شهر لعرض الروستر المنشور وطباعته أو تصديره.</p>
+<div class="scroll"><table><thead><tr><th>الشهر</th><th>الإجراء</th></tr></thead><tbody id="archiveRows"></tbody></table></div>
+</section>
 <section id="tab-reports" class="card hidden">
-<h2>ملخص الشيفتات للشهر المحدد</h2>
-<label>القسم <select id="reportDepartment"></select></label><button id="exportReport">تصدير الملخص CSV</button>
-<div class="scroll"><table><thead><tr><th>الممرض</th><th>القسم</th><th>E</th><th>N</th><th>8</th><th>#</th><th>الإجمالي</th></tr></thead><tbody id="reportRows"></tbody></table></div>
+<h2>تقارير الشهر المحدد</h2>
+<label>التقرير <select id="reportType"><option value="shifts">الشيفتات لكل ممرض</option><option value="coverage">توزيع الشيفتات يوم بيوم</option><option value="preferences">الرغبات مقارنة بالروستر</option></select></label>
+<p id="reportStatus" class="muted"></p>
+<label>القسم <select id="reportDepartment"></select></label><button id="exportReport">تصدير التقرير CSV</button>
+<div class="scroll"><table><thead id="reportHead"></thead><tbody id="reportRows"></tbody></table></div>
 </section>
 <section id="tab-history" class="hidden"><div class="card scroll"><h2>سجل تعديلات المشرفين</h2><table><thead><tr><th>التاريخ والوقت</th><th>المشرف</th><th>الممرض</th><th>اليوم</th><th>قبل</th><th>بعد</th></tr></thead><tbody id="auditRows"></tbody></table></div></section></section></section></main><section id="rosterPrint" dir="rtl"></section><script type="module">
 import {createClient} from 'https://esm.sh/@supabase/supabase-js@2';
@@ -197,7 +204,8 @@ $('userSearch').oninput=()=>renderUsers();
 $('refreshUsers').onclick=()=>load().catch(e=>note(e.message));
 document.querySelectorAll('[data-tab]').forEach(b=>b.onclick=()=>{
  document.querySelectorAll('[data-tab]').forEach(x=>x.classList.toggle('active',x===b));
- ['roster','users','departments','reports','history'].forEach(x=>show('tab-'+x,x===b.dataset.tab));
+ ['roster','users','departments','archive','reports','history'].forEach(x=>show('tab-'+x,x===b.dataset.tab));
+ if(b.dataset.tab==='archive')loadArchive();
 });
 $('usersRows').onclick=async e=>{
  if(!e.target.matches('.saveUser'))return;
@@ -402,25 +410,73 @@ $('departmentRows').onclick=async e=>{
  catch(err){note(err.message);}
  finally{e.target.disabled=false;}
 };
+async function loadArchive(){
+ if(profile?.role!=='admin')return;
+ const rows=$('archiveRows');
+ rows.innerHTML='<tr><td colspan="2">جاري تحميل الأرشيف…</td></tr>';
+ try{
+  const periods=await readAll(db.from('periods').select('month').eq('status','published'),'month');
+  rows.innerHTML=periods.reverse().map(({month})=>{
+   const value=month.slice(0,7);
+   const title=new Date(month+'T12:00:00Z').toLocaleDateString('ar-EG',{month:'long',year:'numeric',timeZone:'UTC'});
+   return '<tr><td>'+esc(title)+'</td><td><button data-archive-month="'+esc(value)+'">عرض الروستر</button></td></tr>';
+  }).join('')||'<tr><td colspan="2">لا توجد روسترات منشورة</td></tr>';
+ }catch(err){rows.innerHTML='<tr><td colspan="2">'+esc(err.message)+'</td></tr>';}
+}
+$('archiveRows').onclick=async e=>{
+ const month=e.target.dataset.archiveMonth;
+ if(!month||profile?.role!=='admin')return;
+ $('month').value=month;
+ document.querySelector('[data-tab="roster"]').click();
+ try{await load();}catch(err){note(err.message);}
+};
 const reportHeader=['الممرض','القسم',...codes,'الإجمالي'];
 function reportData(){
  const filter=$('reportDepartment').value;
  const names=new Map(departments.map(d=>[String(d.id),d.name]));
- const counts=new Map();
- for(const shift of assign){
-  if(!counts.has(shift.user_id))counts.set(shift.user_id,{});
-  const entry=counts.get(shift.user_id);
-  entry[shift.shift_code]=(entry[shift.shift_code]||0)+1;
+ const staff=people.filter(u=>!filter||String(u.department_id)===filter);
+ const staffIds=new Set(staff.map(u=>u.id));
+ const assignments=assign.filter(shift=>staffIds.has(shift.user_id));
+ const byUserDay=new Map(assignments.map(shift=>[shift.user_id+'|'+shift.work_date,shift.shift_code]));
+ const section=user=>names.get(String(user.department_id))||'بدون قسم';
+ const type=$('reportType').value;
+ if(type==='coverage'){
+  const byDate=new Map(dates().map(day=>[day,{E:0,N:0,8:0,'#':0}]));
+  for(const shift of assignments)if(byDate.has(shift.work_date))byDate.get(shift.work_date)[shift.shift_code]++;
+  return {head:['اليوم',...codes,'شيفتات العمل','بدون توزيع'],rows:[...byDate].map(([day,count])=>[
+   day,...codes.map(code=>count[code]),count.E+count.N+count[8],staff.length-codes.reduce((sum,code)=>sum+count[code],0)
+  ])};
  }
- return people.filter(u=>!filter||String(u.department_id)===filter).map(u=>{
-  const totals=codes.map(code=>counts.get(u.id)?.[code]||0);
-  return [u.full_name,names.get(String(u.department_id))||'بدون قسم',...totals,totals.reduce((a,b)=>a+b,0)];
- });
+ if(type==='preferences'){
+  const byUser=new Map(staff.map(user=>[user.id,[0,0,0]]));
+  for(const request of prefs){
+   const counts=byUser.get(request.user_id);
+   if(!counts)continue;
+   const saved=byUserDay.get(request.user_id+'|'+request.work_date);
+   counts[!saved?2:saved===request.shift_code?0:1]++;
+  }
+  return {head:['الممرض','القسم','عدد الرغبات','مطابقة','مختلفة','بدون توزيع'],rows:staff.map(user=>{
+   const counts=byUser.get(user.id);
+   return [user.full_name,section(user),counts.reduce((a,b)=>a+b,0),...counts];
+  })};
+ }
+ const counts=new Map(staff.map(user=>[user.id,{E:0,N:0,8:0,'#':0}]));
+ for(const shift of assignments)counts.get(shift.user_id)[shift.shift_code]++;
+ return {head:reportHeader,rows:staff.map(user=>{
+  const totals=codes.map(code=>counts.get(user.id)[code]);
+  return [user.full_name,section(user),...totals,totals.reduce((a,b)=>a+b,0)];
+ })};
 }
 function renderReport(){
- $('reportRows').innerHTML=reportData().map(row=>'<tr>'+row.map(value=>'<td>'+esc(value)+'</td>').join('')+'</tr>').join('')||'<tr><td colspan="7">لا توجد نتائج</td></tr>';
+ if(!monthReady())return;
+ const {head,rows}=reportData();
+ $('reportStatus').textContent=period.status==='published'?'بيانات الروستر المنشور':'الروستر لسه مسودة';
+ $('reportHead').innerHTML='<tr>'+head.map(value=>'<th>'+esc(value)+'</th>').join('')+'</tr>';
+ $('reportRows').innerHTML=rows.map(row=>'<tr>'+row.map(value=>'<td>'+esc(value)+'</td>').join('')+'</tr>').join('')||
+  '<tr><td colspan="'+head.length+'">لا توجد نتائج</td></tr>';
 }
 $('reportDepartment').onchange=renderReport;
+$('reportType').onchange=renderReport;
 function downloadCsv(rows,filename){
  const csv='\uFEFF'+rows.map(row=>row.map(value=>{
   const text=String(value);
@@ -434,7 +490,11 @@ function downloadCsv(rows,filename){
  link.click();
  setTimeout(()=>URL.revokeObjectURL(url),1000);
 }
-$('exportReport').onclick=()=>downloadCsv([reportHeader,...reportData()],'shift-summary');
+$('exportReport').onclick=()=>{
+ if(!monthReady())return;
+ const {head,rows}=reportData();
+ downloadCsv([head,...rows],$('reportType').value+'-report');
+};
 function finalRoster(){
  const byDay=new Map(assign.map(x=>[x.user_id+'|'+x.work_date,x.shift_code]));
  const days=dates();
