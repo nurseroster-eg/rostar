@@ -214,7 +214,7 @@ function rosterChanges(){
 function renderUsers(){
  const q=$('userSearch').value.trim().toLowerCase();
  const filtered=allProfiles.filter(u=>(u.full_name+' '+(u.employee_no||'')).toLowerCase().includes(q));
- $('usersRows').innerHTML=filtered.map(u=>'<tr data-id="'+esc(u.id)+'"><td><input class="user-input editName" value="'+esc(u.full_name)+'"></td><td><input class="user-input editNo" value="'+esc(u.employee_no||'')+'" placeholder="بدون رقم"></td><td><select class="user-role editRole" '+(u.id===me.id?'disabled':'')+'><option value="nurse" '+(u.role==='nurse'?'selected':'')+'>ممرض</option><option value="admin" '+(u.role==='admin'?'selected':'')+'>مشرف</option></select></td><td><select class="editDepartment">'+departmentOptions(u.department_id,'بدون قسم')+'</select></td><td><button class="saveUser">حفظ</button>'+ (u.role==='nurse'?'<button class="deleteUser" style="background:#a12a2a">حذف</button>':'')+'</td></tr>').join('')||'<tr><td colspan="5">لا توجد نتائج</td></tr>';
+ $('usersRows').innerHTML=filtered.map(u=>'<tr data-id="'+esc(u.id)+'"><td><input class="user-input editName" value="'+esc(u.full_name)+'"></td><td><input class="user-input editNo" value="'+esc(u.employee_no||'')+'" placeholder="بدون رقم"></td><td><select class="user-role editRole" '+(u.id===me.id?'disabled':'')+'><option value="nurse" '+(u.role==='nurse'?'selected':'')+'>ممرض</option><option value="admin" '+(u.role==='admin'?'selected':'')+'>مشرف</option></select></td><td><select class="editDepartment">'+departmentOptions(u.department_id,'بدون قسم')+'</select></td><td><button class="saveUser">حفظ</button>'+ (u.role==='nurse'?'<button class="deleteUser" style="background:#a12a2a">حذف</button><span class="deleteFeedback muted" role="status"></span>':'')+'</td></tr>').join('')||'<tr><td colspan="5">لا توجد نتائج</td></tr>';
 }
 $('userSearch').oninput=()=>renderUsers();
 $('refreshUsers').onclick=()=>load().catch(e=>note(e.message));
@@ -228,9 +228,21 @@ $('usersRows').onclick=async e=>{
   const id=e.target.closest('tr').dataset.id;
   const user=allProfiles.find(item=>item.id===id);
   if(!user||user.role!=='nurse'||!confirm('حذف حساب '+user.full_name+' نهائياً؟'))return;
-  e.target.disabled=true;
-  try{await check(await db.rpc('delete_roster_user',{target_id:id}));await load();note('تم حذف الحساب');}
-  catch(err){note('تعذر الحذف: '+err.message);e.target.disabled=false;}
+  const button=e.target;
+  const feedback=button.closest('td').querySelector('.deleteFeedback');
+  button.disabled=true;
+  feedback.textContent=' جاري الحذف…';
+  try{
+   await check(await db.rpc('delete_roster_user',{target_id:id}));
+  }catch(err){
+   feedback.textContent=' '+(err.message||'تعذر الاتصال بقاعدة البيانات');
+   button.disabled=false;
+   return;
+  }
+  allProfiles=allProfiles.filter(item=>item.id!==id);
+  renderUsers();
+  note('تم حذف الحساب');
+  load().catch(err=>note('تم حذف الحساب. تعذر تحديث الجدول: '+err.message));
   return;
  }
  if(!e.target.matches('.saveUser'))return;
