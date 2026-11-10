@@ -1,3 +1,3 @@
-// Supabase project URL and publishable (anon) key ONLY. Never use secret/service_role keys.
-export const SUPABASE_URL = 'YOUR_PROJECT_URL';
-export const SUPABASE_ANON_KEY = 'YOUR_PUBLISHABLE_KEY';
+// Public Supabase browser configuration. Never put secret/service_role keys here.
+export const SUPABASE_URL = 'https://knvxfyalfqqklpiwcwor.supabase.co';
+export const SUPABASE_ANON_KEY = 'sb_publishable_XIR2KTdDIAOB9XviJ5KN7Q_XEDS1pbd';
