@@ -1,0 +1,6 @@
+<?php
+use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\{AuthController,RosterController,ImportController};
+Route::get('/',fn()=>redirect('/login'));
+Route::middleware('guest')->group(function(){Route::get('/login',[AuthController::class,'form'])->name('login');Route::post('/login',[AuthController::class,'login'])->middleware('throttle:5,1');});
+Route::middleware('auth')->group(function(){Route::post('/logout',[AuthController::class,'logout'])->name('logout');Route::get('/my-roster',[RosterController::class,'nurseIndex'])->name('nurse.index');Route::post('/my-preference',[RosterController::class,'preference'])->name('nurse.preference');Route::get('/admin',[RosterController::class,'adminIndex'])->name('admin.index');Route::post('/admin/assignment',[RosterController::class,'assignment'])->name('admin.assignment');Route::post('/admin/period/{period}',[RosterController::class,'status'])->name('admin.status');Route::post('/admin/staff',[RosterController::class,'staff'])->name('admin.staff');Route::post('/admin/staff/{user}/activate',[RosterController::class,'activate'])->name('admin.activate');Route::post('/admin/import',[ImportController::class,'import'])->name('admin.import');Route::get('/admin/export',[RosterController::class,'export'])->name('admin.export');});
