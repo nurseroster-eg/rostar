@@ -1,4 +1,4 @@
-<!doctype html><html lang="ar" dir="rtl"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>NurseRoster</title><style>body{font:16px Tahoma,Arial;background:#f3f7fa;color:#17354a;margin:0}header{background:#075174;color:white;padding:20px}main{max-width:1100px;margin:auto;padding:16px}.card{background:white;padding:18px;border-radius:12px;margin:14px 0}input,select,button{padding:9px;margin:5px;border:1px solid #cdd6df;border-radius:7px}button{background:#0875a2;color:white;cursor:pointer}.hidden{display:none}table{border-collapse:collapse;width:100%}th,td{border:1px solid #ddd;padding:8px;text-align:center}.scroll{overflow:auto}#notice{color:#a32323}:root{--blue:#08668b;--ink:#18384d}*{box-sizing:border-box}body{font-family:Tahoma,Arial;background:#f4f7fb;color:var(--ink)}header{background:linear-gradient(110deg,#064c70,#0a829d);display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:10px;box-shadow:0 4px 20px #1740571a}header b{font-size:21px}main{max-width:1250px;padding:24px}.card{border:1px solid #e1eaf1;border-radius:16px;box-shadow:0 7px 24px #1c4d650c;padding:24px}input,select{background:#fff;border:1px solid #cbdbe6;border-radius:9px;padding:11px}button{border:0;border-radius:9px;padding:11px 16px;background:var(--blue);font-weight:bold}button:hover{filter:brightness(.94)}button:disabled{opacity:.5}h2{margin:0 0 18px}th{background:#edf5f9;color:#345a70}th,td{border:0;border-bottom:1px solid #e5edf3;padding:12px 8px}tr:hover td{background:#f8fbfd}#login{max-width:480px;margin:55px auto;padding:34px}#loginForm{display:grid;gap:12px}#loginForm input,#loginForm button{width:100%;margin:0}#notice:not(:empty){padding:12px;border-radius:9px;background:#fff0e9}.nav{display:flex;flex-wrap:wrap;gap:8px;margin:16px 0}.nav button{background:white;color:#36586b;border:1px solid #d8e4eb}.nav button.active{background:var(--blue);color:white}.stats{display:grid;grid-template-columns:repeat(auto-fit,minmax(170px,1fr));gap:12px}.stat{background:#fff;padding:20px;border:1px solid #e1eaf1;border-radius:14px}.stat strong{display:block;font-size:27px;margin-top:10px}.muted{color:#65798a;font-size:13px}.user-tools{display:flex;gap:10px;flex-wrap:wrap;align-items:center;margin:14px 0}.user-tools input{min-width:230px}.user-input{max-width:170px}.user-role{max-width:120px}@media(max-width:700px){main{padding:12px}.card{padding:16px}header b{font-size:17px}}
+<!doctype html><html lang="ar" dir="rtl"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>NurseRoster</title><style>body{font:16px Tahoma,Arial;background:#f3f7fa;color:#17354a;margin:0}header{background:#075174;color:white;padding:20px}main{max-width:1100px;margin:auto;padding:16px}.card{background:white;padding:18px;border-radius:12px;margin:14px 0}input,select,button{padding:9px;margin:5px;border:1px solid #cdd6df;border-radius:7px}button{background:#0875a2;color:white;cursor:pointer}.hidden{display:none}table{border-collapse:collapse;width:100%}th,td{border:1px solid #ddd;padding:8px;text-align:center}.scroll{overflow:auto}#notice{color:#a32323}:root{--blue:#08668b;--ink:#18384d}*{box-sizing:border-box}body{font-family:Tahoma,Arial;background:#f4f7fb;color:var(--ink)}header{background:linear-gradient(110deg,#064c70,#0a829d);display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:10px;box-shadow:0 4px 20px #1740571a}header b{font-size:21px}main{max-width:1250px;padding:24px}.card{border:1px solid #e1eaf1;border-radius:16px;box-shadow:0 7px 24px #1c4d650c;padding:24px}input,select{background:#fff;border:1px solid #cbdbe6;border-radius:9px;padding:11px}button{border:0;border-radius:9px;padding:11px 16px;background:var(--blue);font-weight:bold}button:hover{filter:brightness(.94)}button:disabled{opacity:.5}h2{margin:0 0 18px}th{background:#edf5f9;color:#345a70}th,td{border:0;border-bottom:1px solid #e5edf3;padding:12px 8px}tr:hover td{background:#f8fbfd}#login{max-width:480px;margin:55px auto;padding:34px}#loginForm{display:grid;gap:12px}#loginForm input:not([type=checkbox]),#loginForm button{width:100%;margin:0}#notice:not(:empty){padding:12px;border-radius:9px;background:#fff0e9}.nav{display:flex;flex-wrap:wrap;gap:8px;margin:16px 0}.nav button{background:white;color:#36586b;border:1px solid #d8e4eb}.nav button.active{background:var(--blue);color:white}.stats{display:grid;grid-template-columns:repeat(auto-fit,minmax(170px,1fr));gap:12px}.stat{background:#fff;padding:20px;border:1px solid #e1eaf1;border-radius:14px}.stat strong{display:block;font-size:27px;margin-top:10px}.muted{color:#65798a;font-size:13px}.user-tools{display:flex;gap:10px;flex-wrap:wrap;align-items:center;margin:14px 0}.user-tools input{min-width:230px}.user-input{max-width:170px}.user-role{max-width:120px}@media(max-width:700px){main{padding:12px}.card{padding:16px}header b{font-size:17px}}
 .calendar-heading{display:flex;justify-content:space-between;gap:12px;flex-wrap:wrap}
 .calendar-heading h2{margin-bottom:6px}.calendar-heading p{margin:4px 0 18px}
 .calendar-grid{display:grid;grid-template-columns:repeat(7,minmax(0,1fr));gap:8px}
@@ -36,7 +36,19 @@
  #rosterPrint table{print-color-adjust:exact;-webkit-print-color-adjust:exact}
  #rosterPrint h2{font-size:13pt;text-align:right;margin:0 0 3mm}
 }
-</style></head><body><header><b>🏥 NurseRoster — رغبات التمريض</b> <span id="identity"></span><button id="logout" class="hidden">خروج</button></header><main><p id="notice" role="status"></p><section id="login" class="card"><h2>تسجيل الدخول</h2><form id="loginForm"><input id="username" placeholder="اسم المستخدم أو البريد" required autocomplete="username"><input id="password" type="password" placeholder="كلمة المرور" required autocomplete="current-password"><button>دخول</button></form></section><section id="app" class="hidden"><div class="card"><label>شهر الروستر <input id="month" type="month" required></label><button id="reload">تحديث</button><strong id="status"></strong></div><section id="nurse" class="card hidden"><div class="calendar-heading"><div><h2 id="calendarTitle">رغباتي</h2><p id="windowMessage" class="muted"></p></div></div>
+</style></head><body><header><b>🏥 NurseRoster — رغبات التمريض</b> <span id="identity"></span><button id="logout" class="hidden">خروج</button></header><main><p id="notice" role="status"></p><section id="login" class="card"><h2>تسجيل الدخول</h2><form id="loginForm"><input id="username" placeholder="اسم المستخدم أو البريد" required autocomplete="username"><input id="password" type="password" placeholder="كلمة المرور" required autocomplete="current-password"><label><input id="rememberLogin" type="checkbox"> تذكرني على الجهاز ده</label><button>دخول</button><button id="forgotPassword" type="button">نسيت كلمة المرور</button></form>
+<form id="recoveryRequest" class="hidden">
+<h3>استعادة كلمة المرور</h3>
+<label>البريد المسجل <input id="recoveryEmail" type="email" required autocomplete="email"></label>
+<button>إرسال رابط الاستعادة</button><button id="backToLogin" type="button">رجوع</button>
+<p class="muted">لو حسابك باسم مستخدم فقط، تواصل مع مشرف النظام لإعادة تعيين كلمة المرور.</p>
+</form>
+<form id="changePassword" class="hidden">
+<h3>اختار كلمة مرور جديدة</h3>
+<label>كلمة المرور الجديدة <input id="newRecoveryPassword" type="password" minlength="12" maxlength="72" required autocomplete="new-password"></label>
+<label>تأكيد كلمة المرور <input id="confirmRecoveryPassword" type="password" minlength="12" maxlength="72" required autocomplete="new-password"></label>
+<button>حفظ كلمة المرور</button>
+</form></section><section id="app" class="hidden"><div class="card"><label>شهر الروستر <input id="month" type="month" required></label><button id="reload">تحديث</button><strong id="status"></strong></div><section id="nurse" class="card hidden"><div class="calendar-heading"><div><h2 id="calendarTitle">رغباتي</h2><p id="windowMessage" class="muted"></p></div></div>
 <form id="preferencesForm"><div id="calendarGrid" class="calendar-grid"></div>
 <div class="calendar-actions"><button id="savePreferences">حفظ كل الرغبات</button><span id="calendarHint" class="muted">اختار الشيفت للأيام المطلوبة، وبعدها احفظ مرة واحدة.</span></div>
 </form></section><section id="admin" class="hidden"><nav class="nav"><button class="active" data-tab="roster">📅 إدارة الروستر</button><button data-tab="users">👥 إدارة المستخدمين</button><button data-tab="departments">الأقسام</button><button data-tab="archive">الأرشيف</button><button data-tab="reports">التقارير</button><button data-tab="history">🕘 سجل التعديلات</button></nav><section id="tab-roster"><div class="stats"><div class="stat"><span class="muted">الممرضون</span><strong id="statNurses">0</strong></div><div class="stat"><span class="muted">رغبات الشهر</span><strong id="statPrefs">0</strong></div><div class="stat"><span class="muted">الشيفتات الموزعة</span><strong id="statAssign">0</strong></div></div><div class="card"><h2>لوحة المشرف</h2><select id="periodStatus"><option value="open">فتح الرغبات</option><option value="closed">إغلاق الرغبات</option><option value="published">نشر الروستر</option></select><div class="window-fields"><label>بداية استقبال الرغبات <input type="date" id="opensOn"></label><label>آخر يوم للاستقبال <input type="date" id="closesOn"></label><small class="muted">بتوقيت القاهرة. الشهر المختار فوق هو شهر الروستر.</small></div><p id="rosterGuide" class="muted" aria-live="polite"></p><button id="saveStatus">حفظ حالة الشهر</button><button id="saveRoster">حفظ الروستر</button><button id="printRoster">طباعة النهائي</button><button id="export">تصدير النهائي Excel</button></div><div class="card"><h2>رغبات التمريض والروستر</h2><p class="muted">السطر الأول رغبات الممرض. السطر التاني روستر المشرف، والخانات المظللة مقترحات من الرغبات لحد ما تحفظها.</p><div class="scroll roster-scroll"><table class="roster-grid"><thead id="adminHead"></thead><tbody id="adminRows"></tbody></table></div></div></section><section id="tab-users" class="hidden"><div class="card"><h2>👥 إدارة المستخدمين</h2><p class="muted">إنشاء حسابات وتعديل بياناتها وصلاحياتها وأقسامها.</p><form id="createUserForm" class="user-tools">
@@ -217,7 +229,61 @@ $('usersRows').onclick=async e=>{
 };
 
 async function audit(){const rows=await check(await db.from('roster_audit').select('*').order('happened_at',{ascending:false}).limit(100));const ids=[...new Set(rows.flatMap(x=>[x.actor_id,x.subject_id]).filter(Boolean))];const profiles=ids.length?await check(await db.from('profiles').select('id,full_name').in('id',ids)):[];const names=new Map(profiles.map(x=>[x.id,x.full_name]));$('auditRows').innerHTML=rows.map(x=>'<tr><td>'+esc(new Date(x.happened_at).toLocaleString('ar-EG'))+'</td><td>'+esc(names.get(x.actor_id)||'—')+'</td><td>'+esc(names.get(x.subject_id)||'—')+'</td><td>'+esc(x.work_date)+'</td><td>'+esc(x.old_shift||'—')+'</td><td>'+esc(x.new_shift||'—')+'</td></tr>').join('');}
-$('loginForm').onsubmit=async e=>{e.preventDefault();try{let u=$('username').value.trim();if(!u.includes('@')){if(!/^[a-zA-Z0-9_-]{3,40}$/.test(u))throw Error('اسم المستخدم غير صالح');u+='@roster.invalid';}await check(await db.auth.signInWithPassword({email:u,password:$('password').value}));await session();note('');}catch(e){note(e.message);}};
+const rememberKey='roster-remember-login';
+const rememberSession=()=>localStorage.getItem(rememberKey)==='1';
+const authStorage={
+ getItem:key=>(rememberSession()?localStorage:sessionStorage).getItem(key),
+ setItem(key,value){
+  const remember=rememberSession();
+  (remember?sessionStorage:localStorage).removeItem(key);
+  (remember?localStorage:sessionStorage).setItem(key,value);
+ },
+ removeItem(key){localStorage.removeItem(key);sessionStorage.removeItem(key);}
+};
+const recoveryKey='roster-password-recovery';
+const recoveryLink=new URL(location.href).searchParams.get('recovery')==='1';
+const inRecovery=()=>recoveryLink||sessionStorage.getItem(recoveryKey)==='1';
+function showLoginPanel(panel){
+ for(const id of ['loginForm','recoveryRequest','changePassword'])show(id,id===panel);
+}
+$('rememberLogin').checked=rememberSession();
+$('forgotPassword').onclick=()=>{
+ const login=$('username').value.trim();
+ $('recoveryEmail').value=login.includes('@')&&!login.endsWith('@roster.invalid')?login:'';
+ showLoginPanel('recoveryRequest');
+ note('');
+};
+$('backToLogin').onclick=()=>{showLoginPanel('loginForm');note('');};
+$('recoveryRequest').onsubmit=async e=>{
+ e.preventDefault();
+ const button=e.submitter;
+ button.disabled=true;
+ try{
+  const email=$('recoveryEmail').value.trim().toLowerCase();
+  if(email.endsWith('@roster.invalid'))throw Error('الحساب ده باسم مستخدم فقط. تواصل مع مشرف النظام.');
+  const redirectTo=new URL(location.pathname,location.origin);
+  redirectTo.searchParams.set('recovery','1');
+  await check(await db.auth.resetPasswordForEmail(email,{redirectTo:redirectTo.href}));
+  note('لو البريد مسجّل، هيوصلك رابط لإعادة تعيين كلمة المرور.');
+ }catch(err){note(err.message);}
+ finally{button.disabled=false;}
+};
+$('changePassword').onsubmit=async e=>{
+ e.preventDefault();
+ const password=$('newRecoveryPassword').value;
+ if(password!==$('confirmRecoveryPassword').value){note('كلمتا المرور غير متطابقتين');return;}
+ const button=e.submitter;
+ button.disabled=true;
+ try{
+  await check(await db.auth.updateUser({password}));
+  await check(await db.auth.signOut());
+  sessionStorage.removeItem(recoveryKey);
+  history.replaceState(null,'',location.pathname);
+  location.reload();
+ }catch(err){note(err.message);button.disabled=false;}
+};
+$('loginForm').onsubmit=async e=>{e.preventDefault();try{let u=$('username').value.trim();if(!u.includes('@')){if(!/^[a-zA-Z0-9_-]{3,40}$/.test(u))throw Error('اسم المستخدم غير صالح');u+='@roster.invalid';}if($('rememberLogin').checked)localStorage.setItem(rememberKey,'1');else localStorage.removeItem(rememberKey);
+await check(await db.auth.signInWithPassword({email:u,password:$('password').value}));await session();note('');}catch(e){note(e.message);}};
 $('logout').onclick=async()=>{await db.auth.signOut();profile=null;loadedMonth=null;++loadVersion;$('identity').textContent='';await session();};
 $('reload').onclick=()=>load().catch(e=>note(e.message));$('month').onchange=$('reload').onclick;
 $('preferencesForm').onsubmit=async e=>{
@@ -552,5 +618,26 @@ $('printRoster').onclick=()=>{
  window.print();
 };
 window.addEventListener('afterprint',()=>document.body.classList.remove('printing-roster'));
-if(SUPABASE_URL.startsWith('YOUR_')||SUPABASE_ANON_KEY.startsWith('YOUR_')){note('لازم تضبط docs/config.js ببيانات Supabase الأول.');}else{db=createClient(SUPABASE_URL,SUPABASE_ANON_KEY);session().catch(e=>note(e.message));}
+if(SUPABASE_URL.startsWith('YOUR_')||SUPABASE_ANON_KEY.startsWith('YOUR_')){note('لازم تضبط docs/config.js ببيانات Supabase الأول.');}else{
+ db=createClient(SUPABASE_URL,SUPABASE_ANON_KEY,{auth:{storage:authStorage}});
+ db.auth.onAuthStateChange(event=>{
+  if(event==='PASSWORD_RECOVERY'){
+   sessionStorage.setItem(recoveryKey,'1');
+   show('app',false);
+   show('login',true);
+   showLoginPanel('changePassword');
+  }
+ });
+ (async()=>{
+  if(!inRecovery())return session();
+  const {data:{session:active}}=await db.auth.getSession();
+  if(active&&sessionStorage.getItem(recoveryKey)==='1')showLoginPanel('changePassword');
+  else{
+   sessionStorage.removeItem(recoveryKey);
+   history.replaceState(null,'',location.pathname);
+   showLoginPanel('recoveryRequest');
+   note('رابط الاستعادة غير صالح أو انتهت مدته. اطلب رابط جديد.');
+  }
+ })().catch(err=>note(err.message));
+}
 </script></body></html>
